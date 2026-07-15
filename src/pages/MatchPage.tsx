@@ -25,6 +25,7 @@ export default function MatchPage() {
   const [teamB, setTeamB] = useState<string[]>([])
   const [manualName, setManualName] = useState('')
   const [manualError, setManualError] = useState('')
+  const [uploadError, setUploadError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [goals, setGoals] = useState<Record<string, number>>({})
   const [assists, setAssists] = useState<Record<string, number>>({})
@@ -37,22 +38,31 @@ export default function MatchPage() {
   const hasAnyGoal = Object.values(goals).some((count) => count > 0)
   const canSaveAwards = Boolean(awards.mvpId && awards.bestDefenderId && awards.badPlayerId)
 
-  const handleParse = async () => {
+  const handleUpload = async () => {
     const names = parseAthleteList(rawList)
-    const result = await checkDuplicates(names)
-    setParsedNames(names)
-    setDuplicates(result.existing)
-  }
 
-  const handleSave = async () => {
+    if (!names.length) {
+      setUploadError('Adicione pelo menos um atleta para continuar.')
+      return
+    }
+
+    setUploadError('')
     setIsSaving(true)
-    const created = await saveAthletes(parsedNames)
-    setIsSaving(false)
-    if (created.length) {
-      const splitIndex = Math.ceil(created.length / 2)
-      setTeamA(created.slice(0, splitIndex))
-      setTeamB(created.slice(splitIndex))
+
+    try {
+      const result = await checkDuplicates(names)
+      setParsedNames(names)
+      setDuplicates(result.existing)
+      await saveAthletes(names)
+
+      const splitIndex = Math.ceil(names.length / 2)
+      setTeamA(names.slice(0, splitIndex))
+      setTeamB(names.slice(splitIndex))
       setStep('teams')
+    } catch (error) {
+      setUploadError('Não foi possível salvar os atletas. Verifique as permissões do Firestore.')
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -192,16 +202,19 @@ export default function MatchPage() {
               <textarea
                 value={rawList}
                 onChange={(event) => setRawList(event.target.value)}
-                className="mt-2 min-h-[140px] w-full rounded-2xl border border-white/10 bg-[#0a0a0c] p-3 text-sm text-white outline-none"
+                className="mt-2 min-h-[140px] w-full rounded-2xl border border-[#d2fc38]/70 bg-[#d2fc38]/10 p-3 text-sm text-white outline-none shadow-[0_0_0_1px_rgba(210,252,56,0.2)] focus:border-[#d2fc38] focus:bg-[#d2fc38]/15"
                 placeholder="1. João Silva\n2-Maria Souza"
               />
             </label>
 
+            {uploadError ? <p className="text-sm text-red-300">{uploadError}</p> : null}
+
             <button
-              onClick={handleParse}
-              className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]"
+              onClick={handleUpload}
+              disabled={isSaving}
+              className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Analisar lista
+              {isSaving ? 'Uploading...' : 'Upload'}
             </button>
 
             {parsedNames.length > 0 && (
@@ -220,14 +233,6 @@ export default function MatchPage() {
                 {duplicates.length > 0 && (
                   <p className="mt-3 text-sm text-red-300">Alguns nomes já existem no banco e serão ignorados.</p>
                 )}
-
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="mt-4 w-full rounded-2xl border border-[#d2fc38]/40 px-4 py-3 text-sm font-semibold text-[#d2fc38]"
-                >
-                  {isSaving ? 'Salvando...' : 'Confirmar e seguir'}
-                </button>
               </div>
             )}
           </div>
