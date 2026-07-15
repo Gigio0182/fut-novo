@@ -17,19 +17,6 @@ interface Player {
   ptos: string;
 }
 
-const PLAYERS: Player[] = [
-  { rank: 1,  name: 'E. Haaland',    team: 'MCI', g: 24, a:  5, mvp: 6, mvpHL: true,  md: 26, p: 25, pior: 2, ptos: '94.2' },
-  { rank: 2,  name: 'K. De Bruyne',  team: 'MCI', g:  8, a: 16, mvp: 5, mvpHL: true,  md: 22, p: 20, pior: 1, ptos: '91.8' },
-  { rank: 3,  name: 'M. Salah',      team: 'LIV', g: 18, a: 10, mvp: 4, mvpHL: false, md: 27, p: 26, pior: 3, ptos: '89.5' },
-  { rank: 4,  name: 'J. Bellingham', team: 'RMA', g: 16, a:  7, mvp: 5, mvpHL: true,  md: 24, p: 24, pior: 2, ptos: '88.1' },
-  { rank: 5,  name: 'K. Mbappé',     team: 'PSG', g: 21, a:  4, mvp: 6, mvpHL: true,  md: 23, p: 22, pior: 1, ptos: '87.9' },
-  { rank: 6,  name: 'H. Kane',       team: 'FCB', g: 25, a:  6, mvp: 3, mvpHL: false, md: 25, p: 25, pior: 0, ptos: '86.4' },
-  { rank: 7,  name: 'Vinícius Jr.',  team: 'RMA', g: 12, a:  8, mvp: 4, mvpHL: false, md: 21, p: 21, pior: 3, ptos: '84.2' },
-  { rank: 8,  name: 'B. Saka',       team: 'ARS', g: 13, a:  9, mvp: 3, mvpHL: false, md: 27, p: 27, pior: 2, ptos: '83.9' },
-  { rank: 9,  name: 'A. Griezmann',  team: 'ATM', g: 11, a:  7, mvp: 4, mvpHL: false, md: 26, p: 25, pior: 1, ptos: '81.5' },
-  { rank: 10, name: 'L. Martínez',   team: 'INT', g: 20, a:  2, mvp: 3, mvpHL: false, md: 25, p: 24, pior: 4, ptos: '80.8' },
-];
-
 const TABS = ['Todos Jogadores', 'Goleadores', 'Garçons', 'Defensores', 'Participações'];
 
 const TOP_BADGE_COLORS: Record<number, string> = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
@@ -167,7 +154,7 @@ function PlayerRow({ player }: { player: Player }) {
   );
 }
 
-export default function PowerRanking() {
+export default function PowerRanking({ players }: { players: Player[] }) {
   return (
     <div className="flex flex-col items-start bg-[#0a0a0c] w-[402px] h-[903px] overflow-hidden">
       {/* Status Bar */}
@@ -248,7 +235,7 @@ export default function PowerRanking() {
           </div>
 
           {/* Player Rows */}
-          {PLAYERS.map((player) => (
+          {players.map((player) => (
             <PlayerRow key={player.rank} player={player} />
           ))}
         </div>
