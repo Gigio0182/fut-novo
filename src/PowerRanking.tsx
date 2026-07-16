@@ -85,6 +85,13 @@ function PlayerRow({ player }: { player: Player }) {
         </span>
       </div>
 
+      {/* P */}
+      <div className="flex items-start justify-center shrink-0 w-5">
+        <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
+          {player.p}
+        </span>
+      </div>
+
       {/* G */}
       <div className="flex items-start justify-center shrink-0 w-5">
         <span className="font-geist-mono font-medium text-[13px] text-white leading-none">
@@ -118,13 +125,6 @@ function PlayerRow({ player }: { player: Player }) {
       <div className="flex items-start justify-center shrink-0 w-[22px]">
         <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
           {player.md}
-        </span>
-      </div>
-
-      {/* P */}
-      <div className="flex items-start justify-center shrink-0 w-5">
-        <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
-          {player.p}
         </span>
       </div>
 
@@ -197,6 +197,9 @@ export default function PowerRanking({ players }: { players: Player[] }) {
               </span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-5">
+              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">P</span>
+            </div>
+            <div className="flex items-start justify-center shrink-0 w-5">
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">G</span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-5">
@@ -207,9 +210,6 @@ export default function PowerRanking({ players }: { players: Player[] }) {
             </div>
             <div className="flex items-start justify-center shrink-0 w-[22px]">
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">MD</span>
-            </div>
-            <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">P</span>
             </div>
             <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] leading-none">Pior</span>
