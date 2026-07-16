@@ -32,6 +32,7 @@ export default function MatchPage() {
   const [awards, setAwards] = useState({ mvpId: '', bestDefenderId: '', badPlayerId: '' })
   const [saveMessage, setSaveMessage] = useState('')
   const [saveError, setSaveError] = useState('')
+  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null)
 
   const players = [...teamA, ...teamB]
   const totalGoalsA = players.filter((name) => teamA.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
@@ -127,6 +128,10 @@ export default function MatchPage() {
     moveAthlete(name, target as 'A' | 'B')
   }
 
+  const handleExpandRow = (name: string) => {
+    setExpandedPlayer((prev) => (prev === name ? null : name))
+  }
+
   const handleFinish = () => {
     setStep('awards')
   }
@@ -171,37 +176,51 @@ export default function MatchPage() {
     }
   }
 
-  const renderPlayerRow = (name: string) => (
-    <div key={name} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
-      <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
-      <div className="flex flex-wrap items-center justify-end gap-2">
-        <button
-          onClick={() => handleSwitchTeam(name)}
-          className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
-          aria-label={`Trocar ${name} de time`}
-          title="Trocar de time"
-        >
-          ↔
-        </button>
-        <div className="flex items-center gap-1 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-1 text-xs text-[#d2fc38]">
-          <span className="font-semibold">G</span>
-          <span className="rounded-full bg-[#d2fc38]/20 px-2 py-0.5 text-[#d2fc38]">{goals[name] ?? 0}</span>
-          <button onClick={() => updateGoal(name, 1)} className="rounded-full bg-[#d2fc38]/20 px-1.5 py-0.5 text-[11px] font-semibold text-[#0a0a0c]">+</button>
-          {((goals[name] ?? 0) > 0) && (
-            <button onClick={() => updateGoal(name, -1)} className="rounded-full bg-white/10 px-1.5 py-0.5 text-[11px] text-white">−</button>
-          )}
+  const renderPlayerRow = (name: string) => {
+    const isExpanded = expandedPlayer === name
+
+    return (
+      <div key={name} className="overflow-hidden rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-1 text-xs text-[#d2fc38]">
+              <span className="font-semibold">G</span>
+              <span className="rounded-full bg-[#d2fc38]/20 px-2 py-0.5 text-[#d2fc38]">{goals[name] ?? 0}</span>
+            </div>
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#8e919e]">
+              <span className="font-semibold">A</span>
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-white">{assists[name] ?? 0}</span>
+            </div>
+            <button
+              onClick={() => handleSwitchTeam(name)}
+              className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
+              aria-label={`Trocar ${name} de time`}
+              title="Trocar de time"
+            >
+              ↔
+            </button>
+            <button
+              onClick={() => handleExpandRow(name)}
+              className="rounded-full border border-white/10 bg-white/5 p-1.5 text-[12px] text-[#8e919e] transition hover:bg-white/10"
+              aria-label={isExpanded ? 'Recolher controles' : 'Expandir controles'}
+              title={isExpanded ? 'Recolher' : 'Expandir'}
+            >
+              {isExpanded ? '↑' : '↓'}
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#8e919e]">
-          <span className="font-semibold">A</span>
-          <span className="rounded-full bg-white/10 px-2 py-0.5 text-white">{assists[name] ?? 0}</span>
-          <button onClick={() => updateAssist(name, 1)} className="rounded-full bg-white/10 px-1.5 py-0.5 text-[11px] text-white">+</button>
-          {((assists[name] ?? 0) > 0) && (
-            <button onClick={() => updateAssist(name, -1)} className="rounded-full bg-white/10 px-1.5 py-0.5 text-[11px] text-white">−</button>
-          )}
+        <div className={`overflow-hidden transition-[max-height,opacity] duration-200 ${isExpanded ? 'mt-3 max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => updateGoal(name, 1)} className="rounded-full bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c]">+Goal</button>
+            <button onClick={() => updateGoal(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Goal</button>
+            <button onClick={() => updateAssist(name, 1)} className="rounded-full bg-[#d2fc38]/15 px-3 py-1.5 text-[11px] font-semibold text-[#d2fc38]">+Assist</button>
+            <button onClick={() => updateAssist(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Assist</button>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
