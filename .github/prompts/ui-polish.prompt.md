@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Polish one UI slice in this repo
+description: Polish one focused UI area while preserving existing visual language
 tools: ["codebase", "editFiles", "search", "terminal"]
 ---
 
@@ -8,25 +8,69 @@ You are working in the `Fut_Novo_V2` repository.
 
 Objective:
 
-- Improve one existing UI slice without changing the feature set unless explicitly requested.
+- Improve one specific UI area for clarity, hierarchy, spacing, responsiveness, or readability with minimal scope.
+
+Workflow:
+
+1. Discovery
+
+- Start from the exact screen, component, or file named in the request.
+- Summarize current UI issue and one polish hypothesis in up to 6 lines.
+- Identify the smallest set of style/markup changes needed.
+
+2. Implementation
+
+- Preserve established visual language, spacing rhythm, and component structure.
+- Make only focused UI changes required by the request.
+- Avoid unrelated refactors or theme redesign unless explicitly requested.
+
+3. Validation
+
+- Confirm desktop and mobile behavior for the touched area.
+- Run npm run build.
+- Run npm run lint if changes touch lint-sensitive patterns.
+
+4. Report
+
+- Return a concise final report using the exact output format below.
+
+Acceptance criteria:
+
+- UI issue is visibly improved in the requested area.
+- Layout remains stable on desktop and mobile.
+- No unrelated visual regressions introduced.
+- Validation results are included.
+
+Output format:
+
+1. UI improvements made
+
+- One short paragraph.
+
+2. Files changed
+
+- path/to/file — one-line reason per file.
+
+3. Validation
+
+- Build: pass or fail.
+- Lint: pass, fail, or not run.
+- Responsive check: pass or fail.
+
+4. Residual risks
+   List only if relevant. Otherwise write: None.
 
 Execution rules:
 
-- Start from the exact component or screen named in the request.
-- Inspect both the component and its related CSS before editing structure.
-- Prefer spacing, typography, hierarchy, responsiveness, and clarity improvements over structural rewrites.
-- Preserve existing behavior unless the request explicitly asks for interaction changes.
-- Keep the visual language consistent with the current app unless the request asks for a stronger redesign.
-- Avoid introducing new dependencies for simple styling work.
-- Validate with the narrowest useful command, usually `npm run build`.
-- End with a short summary covering files changed and validation performed.
+- Keep polish intentional, subtle, and consistent with existing design language.
+- Do not introduce broad redesign patterns unless requested.
+- Keep response concise and implementation-focused.
 
 Task:
-
 {{input}}
 
 Examples:
 
-- Improve card spacing and readability in `src/PowerRanking.tsx`.
-- Refine mobile layout in `src/App.tsx` and related CSS.
-- Make the ranking section feel cleaner without changing the data flow.
+- Improve table readability and spacing in src/PowerRanking.tsx.
+- Fix cramped filter tabs on small screens in src/PowerRanking.tsx.
+- Improve visual hierarchy in header section of src/App.tsx.
