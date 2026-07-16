@@ -193,7 +193,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
             >
               <span
                 className={`font-outfit font-bold text-[13px] uppercase whitespace-nowrap leading-none ${
-                  i === 0 ? 'text-[#0a0a0c]' : 'text-[#8e919e]'
+                  i === activeTab ? 'text-[#0a0a0c]' : 'text-[#8e919e]'
                 }`}
               >
                 {tab}
