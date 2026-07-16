@@ -15,6 +15,8 @@ function stripListPrefix(value: string) {
 
 function normalizeName(name: string) {
   const cleaned = stripListPrefix(name.trim())
+    .replace(/[\u00AD\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF]/g, '')
+    .trim()
 
   return cleaned
     .toLowerCase()
