@@ -6,6 +6,14 @@ import type { GoalEvent, Match } from '../types'
 
 type Step = 'upload' | 'teams' | 'scoring' | 'awards' | 'success'
 
+interface ScoringEvent {
+  id: string
+  type: 'goal' | 'own_goal'
+  scorer: string
+  team: 'A' | 'B'
+  assist?: string
+}
+
 function formatName(value: string) {
   return value
     .trim()
@@ -38,6 +46,7 @@ export default function MatchPage() {
   const [goalModalAssist, setGoalModalAssist] = useState('')
   const [showAssistList, setShowAssistList] = useState(false)
   const [goalModalError, setGoalModalError] = useState('')
+  const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([])
 
   const players = [...teamA, ...teamB]
   const regularGoalsA = teamA.reduce((total, name) => total + (goals[name] ?? 0), 0)
@@ -161,9 +170,20 @@ export default function MatchPage() {
     if (goalModalOwnGoal) {
       const team = teamA.includes(goalModalPlayer) ? 'A' : 'B'
       setOwnGoalEvents((prev) => [...prev, { athleteId: goalModalPlayer, team }])
+      setScoringEvents((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-${prev.length}`,
+          type: 'own_goal',
+          scorer: goalModalPlayer,
+          team,
+        },
+      ])
       closeGoalModal()
       return
     }
+
+    const scoringTeam = teamA.includes(goalModalPlayer) ? 'A' : 'B'
 
     updateGoal(goalModalPlayer, 1)
 
@@ -171,7 +191,46 @@ export default function MatchPage() {
       updateAssist(goalModalAssist, 1)
     }
 
+    setScoringEvents((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}-${prev.length}`,
+        type: 'goal',
+        scorer: goalModalPlayer,
+        team: scoringTeam,
+        assist: goalModalAssist || undefined,
+      },
+    ])
+
     closeGoalModal()
+  }
+
+  const undoLastScoringEvent = () => {
+    const lastEvent = scoringEvents[scoringEvents.length - 1]
+
+    if (!lastEvent) {
+      return
+    }
+
+    if (lastEvent.type === 'own_goal') {
+      setOwnGoalEvents((prev) => {
+        const indexToRemove = prev.map((event) => `${event.team}:${event.athleteId}`).lastIndexOf(`${lastEvent.team}:${lastEvent.scorer}`)
+
+        if (indexToRemove < 0) {
+          return prev
+        }
+
+        return prev.filter((_, index) => index !== indexToRemove)
+      })
+    } else {
+      updateGoal(lastEvent.scorer, -1)
+
+      if (lastEvent.assist) {
+        updateAssist(lastEvent.assist, -1)
+      }
+    }
+
+    setScoringEvents((prev) => prev.slice(0, -1))
   }
 
   const handleSwitchTeam = (name: string) => {
@@ -414,6 +473,43 @@ export default function MatchPage() {
             >
               Finish Match
             </button>
+
+            <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-[#d2fc38]">Eventos</h2>
+                <button
+                  disabled={scoringEvents.length === 0}
+                  onClick={undoLastScoringEvent}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Undo ultimo
+                </button>
+              </div>
+
+              {scoringEvents.length === 0 ? (
+                <p className="text-sm text-[#8e919e]">Nenhum evento registrado.</p>
+              ) : (
+                <div className="space-y-2">
+                  {[...scoringEvents].reverse().map((event) => (
+                    <div key={event.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#111218] px-3 py-2">
+                      <div className="min-w-0">
+                        {event.type === 'own_goal' ? (
+                          <p className="truncate text-sm text-white">Gol contra de {event.scorer}</p>
+                        ) : (
+                          <p className="truncate text-sm text-white">
+                            Gol de {event.scorer}
+                            {event.assist ? ` (Assist: ${event.assist})` : ''}
+                          </p>
+                        )}
+                      </div>
+                      <span className="ml-3 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-0.5 text-[10px] font-semibold text-[#d2fc38]">
+                        Time {event.team}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {goalModalPlayer ? (
               <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/70 p-4 sm:items-center">
