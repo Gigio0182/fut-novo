@@ -6,8 +6,10 @@ import RankingPage from './pages/RankingPage'
 function AppShell() {
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-white">
-      <div className="mx-auto max-w-[402px] px-4 py-4">
-        <BottomNav />
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0c]/95 backdrop-blur">
+        <div className="mx-auto max-w-[402px] px-4 py-4">
+          <BottomNav />
+        </div>
       </div>
       <Routes>
         <Route path="/" element={<MatchPage />} />
