@@ -28,9 +28,9 @@ const TOP_BORDER_COLOR: Record<number, string> = {
   3: 'rgba(205,127,50,0.2)',
 };
 
-function PlayerRow({ player, activeTab }: { player: Player; activeTab: number }) {
-  const isTop3 = player.rank <= 3;
-  const isTop = player.rank <= 3;
+function PlayerRow({ player, position, activeTab }: { player: Player; position: number; activeTab: number }) {
+  const isTop3 = position <= 3;
+  const isTop = position <= 3;
   const isSortedColumn = activeTab === 0
     ? false
     : activeTab === 1
@@ -49,13 +49,13 @@ function PlayerRow({ player, activeTab }: { player: Player; activeTab: number })
 
   const rowStyle = isTop3
     ? {
-        background: TOP_ROW_BG[player.rank],
-        borderColor: TOP_BORDER_COLOR[player.rank],
+        background: TOP_ROW_BG[position],
+        borderColor: TOP_BORDER_COLOR[position],
         borderStyle: 'solid' as const,
         borderWidth: '0 0 1px 2px',
       }
     : {
-        background: player.rank % 2 === 0 ? '#171821' : '#111218',
+        background: position % 2 === 0 ? '#171821' : '#111218',
         borderColor: '#1f212d',
         borderStyle: 'solid' as const,
         borderWidth: '0 0 1px 0',
@@ -71,15 +71,15 @@ function PlayerRow({ player, activeTab }: { player: Player; activeTab: number })
         {isTop ? (
           <div
             className="flex items-center justify-center rounded-[9px] size-[18px] shrink-0"
-            style={{ background: TOP_BADGE_COLORS[player.rank] }}
+            style={{ background: TOP_BADGE_COLORS[position] }}
           >
             <span className="font-outfit font-black text-[11px] text-[#0a0a0c] leading-none">
-              {player.rank}
+              {position}
             </span>
           </div>
         ) : (
           <span className="font-geist-mono font-bold text-[13px] text-[#8e919e] leading-none">
-            {player.rank}
+            {position}
           </span>
         )}
       </div>
@@ -257,8 +257,8 @@ export default function PowerRanking({ players }: { players: Player[] }) {
           </div>
 
           {/* Player Rows */}
-          {sortedPlayers.map((player) => (
-            <PlayerRow key={player.rank} player={player} activeTab={activeTab} />
+          {sortedPlayers.map((player, index) => (
+            <PlayerRow key={player.rank} player={player} position={index + 1} activeTab={activeTab} />
           ))}
         </div>
       </div>
