@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { checkDuplicates, parseAthleteList, saveAthletes } from '../lib/athleteService'
 import { saveMatch, updateRankings } from '../lib/matchService'
-import type { Match } from '../types'
+import type { GoalEvent, Match } from '../types'
 
 type Step = 'upload' | 'teams' | 'scoring' | 'awards' | 'success'
 
@@ -29,15 +29,24 @@ export default function MatchPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [goals, setGoals] = useState<Record<string, number>>({})
   const [assists, setAssists] = useState<Record<string, number>>({})
+  const [ownGoalEvents, setOwnGoalEvents] = useState<GoalEvent[]>([])
   const [awards, setAwards] = useState({ mvpId: '', bestDefenderId: '', badPlayerId: '' })
   const [saveMessage, setSaveMessage] = useState('')
   const [saveError, setSaveError] = useState('')
-  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null)
+  const [goalModalPlayer, setGoalModalPlayer] = useState<string | null>(null)
+  const [goalModalOwnGoal, setGoalModalOwnGoal] = useState(false)
+  const [goalModalAssist, setGoalModalAssist] = useState('')
+  const [showAssistList, setShowAssistList] = useState(false)
+  const [goalModalError, setGoalModalError] = useState('')
 
   const players = [...teamA, ...teamB]
-  const totalGoalsA = players.filter((name) => teamA.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
-  const totalGoalsB = players.filter((name) => teamB.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
-  const hasAnyGoal = Object.values(goals).some((count) => count > 0)
+  const regularGoalsA = teamA.reduce((total, name) => total + (goals[name] ?? 0), 0)
+  const regularGoalsB = teamB.reduce((total, name) => total + (goals[name] ?? 0), 0)
+  const ownGoalsA = ownGoalEvents.filter((event) => event.team === 'A').length
+  const ownGoalsB = ownGoalEvents.filter((event) => event.team === 'B').length
+  const totalGoalsA = regularGoalsA + ownGoalsB
+  const totalGoalsB = regularGoalsB + ownGoalsA
+  const hasAnyGoal = Object.values(goals).some((count) => count > 0) || ownGoalEvents.length > 0
   const hasPlayers = players.length > 0
 
   const handleUpload = async () => {
@@ -123,13 +132,51 @@ export default function MatchPage() {
     setAssists((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
   }
 
+  const openGoalModal = (name: string) => {
+    setGoalModalPlayer(name)
+    setGoalModalOwnGoal(false)
+    setGoalModalAssist('')
+    setShowAssistList(false)
+    setGoalModalError('')
+  }
+
+  const closeGoalModal = () => {
+    setGoalModalPlayer(null)
+    setGoalModalOwnGoal(false)
+    setGoalModalAssist('')
+    setShowAssistList(false)
+    setGoalModalError('')
+  }
+
+  const confirmGoalModal = () => {
+    if (!goalModalPlayer) {
+      return
+    }
+
+    if (goalModalAssist && goalModalAssist === goalModalPlayer) {
+      setGoalModalError('O autor do gol nao pode ser o assistente.')
+      return
+    }
+
+    if (goalModalOwnGoal) {
+      const team = teamA.includes(goalModalPlayer) ? 'A' : 'B'
+      setOwnGoalEvents((prev) => [...prev, { athleteId: goalModalPlayer, team }])
+      closeGoalModal()
+      return
+    }
+
+    updateGoal(goalModalPlayer, 1)
+
+    if (goalModalAssist) {
+      updateAssist(goalModalAssist, 1)
+    }
+
+    closeGoalModal()
+  }
+
   const handleSwitchTeam = (name: string) => {
     const target = teamA.includes(name) ? 'B' : 'A'
     moveAthlete(name, target as 'A' | 'B')
-  }
-
-  const handleExpandRow = (name: string) => {
-    setExpandedPlayer((prev) => (prev === name ? null : name))
   }
 
   const handleFinish = () => {
@@ -160,6 +207,7 @@ export default function MatchPage() {
               team: teamA.includes(athleteId) ? 'A' : 'B',
             })),
           ),
+        ownGoals: ownGoalEvents,
         mvpId: awards.mvpId || null,
         bestDefenderId: awards.bestDefenderId || null,
         badPlayerId: awards.badPlayerId || null,
@@ -177,21 +225,11 @@ export default function MatchPage() {
   }
 
   const renderPlayerRow = (name: string) => {
-    const isExpanded = expandedPlayer === name
-
     return (
       <div key={name} className="overflow-hidden rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
         <div className="flex items-center justify-between gap-3">
           <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
           <div className="flex flex-wrap items-center justify-end gap-2">
-            <div className="flex items-center gap-1 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-1 text-xs text-[#d2fc38]">
-              <span className="font-semibold">G</span>
-              <span className="rounded-full bg-[#d2fc38]/20 px-2 py-0.5 text-[#d2fc38]">{goals[name] ?? 0}</span>
-            </div>
-            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#8e919e]">
-              <span className="font-semibold">A</span>
-              <span className="rounded-full bg-white/10 px-2 py-0.5 text-white">{assists[name] ?? 0}</span>
-            </div>
             <button
               onClick={() => handleSwitchTeam(name)}
               className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
@@ -201,26 +239,22 @@ export default function MatchPage() {
               ↔
             </button>
             <button
-              onClick={() => handleExpandRow(name)}
-              className="rounded-full border border-white/10 bg-white/5 p-1.5 text-[12px] text-[#8e919e] transition hover:bg-white/10"
-              aria-label={isExpanded ? 'Recolher controles' : 'Expandir controles'}
-              title={isExpanded ? 'Recolher' : 'Expandir'}
+              onClick={() => openGoalModal(name)}
+              className="rounded-full border border-[#d2fc38]/20 bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c] transition hover:brightness-95"
+              aria-label={`Registrar gol para ${name}`}
+              title="Registrar gol"
             >
-              {isExpanded ? '↑' : '↓'}
+              GOL
             </button>
-          </div>
-        </div>
-        <div className={`overflow-hidden transition-[max-height,opacity] duration-200 ${isExpanded ? 'mt-3 max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => updateGoal(name, 1)} className="rounded-full bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c]">+Goal</button>
-            <button onClick={() => updateGoal(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Goal</button>
-            <button onClick={() => updateAssist(name, 1)} className="rounded-full bg-[#d2fc38]/15 px-3 py-1.5 text-[11px] font-semibold text-[#d2fc38]">+Assist</button>
-            <button onClick={() => updateAssist(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Assist</button>
           </div>
         </div>
       </div>
     )
   }
+
+  const goalModalTeamPlayers = goalModalPlayer
+    ? (teamA.includes(goalModalPlayer) ? teamA : teamB).filter((name) => name !== goalModalPlayer)
+    : []
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
@@ -380,6 +414,76 @@ export default function MatchPage() {
             >
               Finish Match
             </button>
+
+            {goalModalPlayer ? (
+              <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/70 p-4 sm:items-center">
+                <div className="w-full max-w-[360px] rounded-3xl border border-white/10 bg-[#111218] p-4 shadow-2xl">
+                  <h3 className="text-base font-semibold text-[#d2fc38]">Registrar gol</h3>
+                  <p className="mt-1 text-sm text-white">{goalModalPlayer}</p>
+
+                  <label className="mt-4 flex items-center gap-2 rounded-2xl border border-white/10 bg-[#0a0a0c] px-3 py-2 text-sm text-white">
+                    <input
+                      type="checkbox"
+                      checked={goalModalOwnGoal}
+                      onChange={(event) => {
+                        const checked = event.target.checked
+                        setGoalModalOwnGoal(checked)
+                        if (checked) {
+                          setGoalModalAssist('')
+                          setShowAssistList(false)
+                        }
+                        setGoalModalError('')
+                      }}
+                    />
+                    Gol contra
+                  </label>
+
+                  <div className="mt-3">
+                    <p className="mb-2 text-sm text-[#8e919e]">Assistencia</p>
+                    <button
+                      disabled={goalModalOwnGoal}
+                      onClick={() => setShowAssistList((prev) => !prev)}
+                      className="w-full rounded-2xl border border-white/10 bg-[#0a0a0c] px-3 py-2 text-left text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {goalModalAssist || 'Selecionar assistente'}
+                    </button>
+
+                    {showAssistList && !goalModalOwnGoal ? (
+                      <div className="mt-2 max-h-40 overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0c]">
+                        {goalModalTeamPlayers.length === 0 ? (
+                          <p className="px-3 py-2 text-sm text-[#8e919e]">Sem outro jogador disponivel.</p>
+                        ) : (
+                          goalModalTeamPlayers.map((name) => (
+                            <button
+                              key={name}
+                              onClick={() => {
+                                setGoalModalAssist(name)
+                                setShowAssistList(false)
+                                setGoalModalError('')
+                              }}
+                              className="block w-full border-b border-white/5 px-3 py-2 text-left text-sm text-white last:border-b-0 hover:bg-white/5"
+                            >
+                              {name}
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {goalModalError ? <p className="mt-3 text-sm text-red-300">{goalModalError}</p> : null}
+
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <button onClick={closeGoalModal} className="rounded-2xl border border-white/10 px-3 py-2 text-sm text-white">
+                      Cancelar
+                    </button>
+                    <button onClick={confirmGoalModal} className="rounded-2xl bg-[#d2fc38] px-3 py-2 text-sm font-semibold text-[#0a0a0c]">
+                      Confirmar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
         ) : step === 'awards' ? (
           <div className="space-y-4">

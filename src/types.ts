@@ -14,6 +14,11 @@ export interface AssistEvent {
   team: 'A' | 'B'
 }
 
+export interface OwnGoalEvent {
+  athleteId: string
+  team: 'A' | 'B'
+}
+
 export interface Match {
   id: string
   date: string
@@ -21,6 +26,7 @@ export interface Match {
   teamB: string[]
   goals: GoalEvent[]
   assists: AssistEvent[]
+  ownGoals?: OwnGoalEvent[]
   mvpId: string | null
   bestDefenderId: string | null
   badPlayerId: string | null
