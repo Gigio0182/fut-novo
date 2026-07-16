@@ -41,20 +41,3 @@ Constraints: do not refactor UI.
 
 ---
 
-What to write for an upload bug (minimal version):
-
-/bug-fix
-Current issue: upload creates duplicate athletes when name casing differs.
-Expected behavior: Joao, JOAO, and 1. Joao must merge into one athlete.
-Affected scope: upload ingestion flow and name matching.
-Acceptance criteria:
-Joao and JOAO merge.
-Joao and Joana remain separate.
-Stats are aggregated.
-Use #file:docs/upload-button-feature.md as source of truth.
-
-practical rule:
-
-Simple bug: 5 to 8 lines.
-Medium bug: 10 to 15 lines.
-Complex bug: full template.

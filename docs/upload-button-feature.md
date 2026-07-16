@@ -2,7 +2,11 @@
 
 ## 1. Purpose
 
-This document defines the Upload button feature for importing athlete records into the ranking flow. The feature must parse user-provided list lines, normalize athlete names, avoid duplicates, and aggregate cumulative stats in a single athlete record.
+This document defines the Upload button feature for importing athlete records into the ranking flow.
+
+Current implementation parses user-provided list lines, normalizes names, and avoids duplicate athlete creation.
+
+Target behavior extends this flow to aggregate cumulative stats in a single athlete record when equivalent names are detected.
 
 ## 2. Scope
 
@@ -41,7 +45,8 @@ The feature must extract the correct athlete name from all formats above.
 ### FR-1: Upload trigger
 
 - User clicks Upload button.
-- System accepts list input (paste, file, or both depending on final UI implementation).
+- System accepts pasted list input (current).
+- File input is optional future extension.
 
 ### FR-2: Row parsing
 
@@ -70,12 +75,13 @@ Examples:
 ### FR-4: Existence validation and merge
 
 - Use normalized name as lookup key.
-- If athlete already exists, update same record by aggregating additive stats.
+- Current implementation: if athlete already exists, it is flagged as duplicate and not inserted again.
+- Target behavior: update same record by aggregating additive stats.
 - If athlete does not exist, create a new record.
 
 ### FR-5: Aggregation behavior
 
-For duplicate matches, sum additive fields:
+Target behavior for duplicate matches:
 
 - Goals (`g`)
 - Assists (`a`)
@@ -92,7 +98,13 @@ After merge, ranking list processing remains unchanged and consumes deduplicated
 
 ### FR-7: User feedback
 
-After upload, show summary:
+Current implementation feedback:
+
+- Shows parsed athletes list.
+- Highlights duplicates that already exist and indicates they will be ignored.
+- Shows actionable error when input is empty or save fails.
+
+Target summary after upload:
 
 - Total rows read
 - Valid rows processed
@@ -126,7 +138,12 @@ After upload, show summary:
 
 ## 8. Data Contract (Logical)
 
-This project currently renders static players in `src/PowerRanking.tsx`. The upload feature should converge on a record model equivalent to:
+Current repository note:
+
+- Upload and match flow run in `src/pages/MatchPage.tsx`.
+- Ranking view reads persisted entries from Firestore in `src/pages/RankingPage.tsx`.
+
+The upload feature should converge on a record model equivalent to:
 
 ```ts
 interface AthleteRecord {
@@ -211,9 +228,11 @@ function normalizeName(name: string): string {
 
 ## 13. Implementation Notes for Current Repository
 
-- `src/App.tsx` is currently a shell that renders `PowerRanking`.
-- `src/PowerRanking.tsx` currently uses static `PLAYERS` data.
-- Upload feature likely requires introducing stateful data source and handlers before replacing static list usage.
+- `src/App.tsx` uses routing with `/` for match flow and `/ranking` for ranking page.
+- Upload UI is implemented in `src/pages/MatchPage.tsx` using a textarea paste flow.
+- Parsing, normalization, duplicate check, and athlete insertion are implemented in `src/lib/athleteService.ts`.
+- Duplicate handling currently follows ignore-existing behavior (no stat merge on upload).
+- Match save triggers ranking aggregation via `src/lib/matchService.ts`.
 
 ## 14. Rollout Checklist
 

@@ -386,4 +386,20 @@ Audit requirements:
 
 ## 17. Repository Notes
 
-Current project (`src/App.tsx` and `src/PowerRanking.tsx`) renders static ranking data and does not yet implement a full match engine. This document is the target behavior spec to guide future implementation.
+Current repository status includes a partial implementation of the lifecycle in UI + Firestore services.
+
+Implemented now:
+
+- Route `/` runs a multi-step match flow (`upload -> teams -> scoring -> awards -> success`).
+- Match data is persisted in Firestore collection `matches`.
+- Ranking aggregation is applied in Firestore collection `rankings` through transactional updates.
+- Goal, assist, MVP, best defender, and bad player counters are accumulated per participant.
+
+Not implemented yet (still target behavior from this spec):
+
+- Formal domain states (`draft`, `scheduled`, `in_progress`, `paused`, `finished`, `canceled`) persisted in match model.
+- Append-only event store with event IDs, transition guards, and replay.
+- Team registry model with `shortCode`, active-state validations, and schedule validation.
+- API surface listed in section 14.
+
+Use this document as the target architecture while treating current code as an incremental, simplified baseline.

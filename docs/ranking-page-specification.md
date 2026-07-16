@@ -6,14 +6,15 @@ This document defines the functional and visual behavior of the Ranking page. It
 
 ## 2. Current Implementation Context
 
-The current Ranking page is rendered by `src/PowerRanking.tsx` and mounted through `src/App.tsx`.
+The current Ranking page is rendered by `src/PowerRanking.tsx`, mounted in `src/pages/RankingPage.tsx`, and routed from `src/App.tsx`.
 
 Current state:
 
-- Static player data (`PLAYERS`) is hardcoded.
-- Tabs are visual only and do not change dataset.
+- Data is loaded from Firestore collection `rankings` ordered by `points` descending.
+- Loading and empty states are implemented in `RankingPage`.
+- Tabs are functional and re-order rows in-memory by metric.
 - Ranking rows are rendered with top-3 highlight rules.
-- No persistence, upload wiring, or live match integration yet.
+- Ranking updates are persisted via match save flow (`saveMatch` + `updateRankings`).
 
 This specification defines both current expected behavior and target behavior for future iterations.
 
@@ -126,7 +127,14 @@ Table columns and order:
 
 ### 8.1 Sorting source of truth
 
-Target behavior:
+Current implementation:
+
+1. Base dataset arrives pre-sorted from Firestore by `points` descending.
+2. Tab `Todos Jogadores` keeps incoming order.
+3. Other tabs sort by selected metric (`g`, `a`, `md`, `p`) descending.
+4. Visual position is recalculated from list index in the rendered view.
+
+Target behavior (future hardening):
 
 1. Sort by `ptos` descending.
 2. Tie-breaker 1: `g` descending.
@@ -180,16 +188,26 @@ If dataset is empty:
 
 ### 10.3 Error
 
-If data retrieval fails:
+Target behavior:
 
 - Show inline error message.
 - Provide retry action.
+
+Current note:
+
+- Explicit Firestore subscription error UI is not implemented yet.
 
 ## 11. Integration Points
 
 ### 11.1 Upload integration
 
-From upload feature:
+Current implementation:
+
+- Upload flow stores new athletes and flags duplicates.
+- Existing duplicate names are currently ignored at athlete creation step.
+- Ranking rows are updated by match finalization and ranking transaction writes.
+
+Target behavior:
 
 - Parsed and normalized athletes merge into ranking dataset.
 - Duplicate names (after normalization) aggregate stats in one record.
@@ -274,6 +292,7 @@ Current file `src/PowerRanking.tsx` can be progressively split as complexity gro
 
 ## 18. Implementation Notes for This Repository
 
-- `src/App.tsx` currently mounts `PowerRanking` in a centered shell.
-- `src/PowerRanking.tsx` currently contains all ranking UI and static mock data.
-- Initial implementation can preserve UI while introducing state and data adapters behind existing presentation.
+- `src/App.tsx` uses router paths `/` (match flow) and `/ranking` (ranking view).
+- `src/pages/RankingPage.tsx` subscribes to Firestore rankings and maps entries to `PowerRanking` props.
+- `src/PowerRanking.tsx` is presentation-heavy and now includes tab-based sort behavior.
+- Next increment should add explicit error state handling and deterministic tie-breakers in ranking sort logic.

@@ -10,22 +10,66 @@ Objective:
 
 - Fix one concrete bug with the smallest defensible code change.
 
-Execution rules:
+Workflow:
+
+1. Discovery
 
 - Start from the exact failing behavior, file, or component named in the request.
-- Form one local hypothesis about the root cause before editing.
-- Prefer the narrowest code path that directly controls the bug.
-- Do not refactor unrelated code while fixing the issue.
-- Add or adjust only the minimal logic needed to correct the behavior.
-- Validate with the narrowest useful command, usually `npm run build`, and use `npm run lint` when the fix touches lint-sensitive patterns.
-- End with a short summary covering the root cause, files changed, and validation performed.
+- Form one local root-cause hypothesis in up to 5 lines.
+- Identify the narrowest code path that controls the bug.
+
+2. Implementation
+
+- Change only what is required to fix the behavior.
+- Do not refactor unrelated code.
+- Preserve existing visual and architectural patterns unless the bug requires otherwise.
+
+3. Validation
+
+- Run the narrowest useful validation command.
+- Default: npm run build.
+- Also run npm run lint when touched files are lint-sensitive.
+
+4. Report
+
+- Return a concise final report using the exact output format below.
+
+Acceptance criteria:
+
+- The reported failing behavior is fixed.
+- No unrelated behavior changes were introduced.
+- Validation command results are included.
+
+Output format:
+
+1. Root cause
+
+- One short paragraph.
+
+2. Files changed
+
+- path/to/file ÔÇö one-line reason per file.
+
+3. Validation
+
+- Build: pass or fail.
+- Lint: pass, fail, or not run.
+
+4. Residual risks
+
+- List only if relevant. Otherwise write: None.
+
+Execution rules:
+
+- Prefer the narrowest direct fix over broad redesign.
+- Avoid repeating context provided in the request.
+- Keep response concise and implementation-focused.
 
 Task:
-
-{{when cliclking on button name="Confirmar & Salvar", I'm getting the error "updateRankings failed: Firestore transactions require all reads to be executed before all writes. Fix this error."}}
+{{input}}
 
 Examples:
 
-- Fix duplicate rendering in `src/PowerRanking.tsx`.
-- Fix a layout break on small screens in `src/App.tsx`.
+- Fix duplicate rendering in src/PowerRanking.tsx.
+- Fix a layout break on small screens in src/App.tsx.
 - Fix a TypeScript error introduced by the last change.
