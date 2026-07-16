@@ -226,7 +226,7 @@ export default function MatchPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
       <div className="w-full max-w-[420px] rounded-[32px] border border-white/10 bg-[#111218] p-4 shadow-2xl sm:p-5">
         <div className="mb-5 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#16181f] to-[#0d0f13] p-4">
-          <h1 className="text-2xl font-bold text-[#d2fc38]">Craques da Volvo</h1>
+          <h1 className="text-center text-2xl font-bold text-[#d2fc38]">Craques da Volvo</h1>
         </div>
 
         {step === 'upload' ? (
