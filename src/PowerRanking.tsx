@@ -197,7 +197,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
               </span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">P</span>
+              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">J</span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-5">
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">G</span>
@@ -212,7 +212,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">MD</span>
             </div>
             <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] leading-none">Pior</span>
+              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] leading-none">P</span>
             </div>
             <div className="flex items-start justify-end shrink-0 w-12">
               <span className="font-outfit font-extrabold text-[11px] text-[#d2fc38] uppercase leading-none">Ptos</span>
@@ -235,9 +235,9 @@ export default function PowerRanking({ players }: { players: Player[] }) {
             ['A', 'Assistências'],
             ['MVP', 'Melhor da partida'],
             ['MD', 'Melhor defensor'],
-            ['P', 'Partidas Jogadas'],
+            ['J', 'Jogos'],
             ['Ptos', 'Pontos totais', true],
-            ['Pior', 'Pior em campo'],
+            ['P', 'Pior em campo'],
           ].map(([abbr, desc, isAccent]) => (
             <span key={String(abbr)} className="font-outfit font-normal text-[11px] text-[#50535e] leading-none whitespace-nowrap">
               <span className={`font-outfit font-bold text-[11px] ${isAccent ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>
