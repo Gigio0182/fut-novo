@@ -226,19 +226,7 @@ export default function MatchPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
       <div className="w-full max-w-[420px] rounded-[32px] border border-white/10 bg-[#111218] p-4 shadow-2xl sm:p-5">
         <div className="mb-5 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#16181f] to-[#0d0f13] p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.3em] text-[#8e919e]">Match Setup</p>
-              <h1 className="mt-1 text-2xl font-bold text-[#d2fc38]">Craques da Volvo</h1>
-              <p className="mt-1 text-sm text-[#8e919e]">Organize a partida, marque os gols e salve tudo em um só fluxo.</p>
-            </div>
-            <button
-              onClick={() => navigate('/ranking')}
-              className="rounded-full border border-[#d2fc38]/40 px-3 py-1 text-sm font-medium text-[#d2fc38]"
-            >
-              Ranking
-            </button>
-          </div>
+          <h1 className="text-2xl font-bold text-[#d2fc38]">Craques da Volvo</h1>
         </div>
 
         {step === 'upload' ? (
