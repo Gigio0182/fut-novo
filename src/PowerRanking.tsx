@@ -28,9 +28,24 @@ const TOP_BORDER_COLOR: Record<number, string> = {
   3: 'rgba(205,127,50,0.2)',
 };
 
-function PlayerRow({ player }: { player: Player }) {
+function PlayerRow({ player, activeTab }: { player: Player; activeTab: number }) {
   const isTop3 = player.rank <= 3;
   const isTop = player.rank <= 3;
+  const isSortedColumn = activeTab === 0
+    ? false
+    : activeTab === 1
+      ? 'g'
+      : activeTab === 2
+        ? 'a'
+        : activeTab === 3
+          ? 'md'
+          : activeTab === 4
+            ? 'p'
+            : null
+
+  const columnValueClass = isSortedColumn === null
+    ? 'text-[#8e919e]'
+    : 'text-[#d2fc38]'
 
   const rowStyle = isTop3
     ? {
@@ -88,22 +103,22 @@ function PlayerRow({ player }: { player: Player }) {
       </div>
 
       {/* P */}
-      <div className="flex items-start justify-center shrink-0 w-5">
-        <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
+      <div className={`flex items-start justify-center shrink-0 w-5 ${isSortedColumn === 'p' ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isSortedColumn === 'p' ? columnValueClass : 'text-[#8e919e]'}`}>
           {player.p}
         </span>
       </div>
 
       {/* G */}
-      <div className="flex items-start justify-center shrink-0 w-5">
-        <span className="font-geist-mono font-medium text-[13px] text-white leading-none">
+      <div className={`flex items-start justify-center shrink-0 w-5 ${isSortedColumn === 'g' ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isSortedColumn === 'g' ? columnValueClass : 'text-white'}`}>
           {player.g}
         </span>
       </div>
 
       {/* A */}
-      <div className="flex items-start justify-center shrink-0 w-5">
-        <span className="font-geist-mono font-medium text-[13px] text-white leading-none">
+      <div className={`flex items-start justify-center shrink-0 w-5 ${isSortedColumn === 'a' ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isSortedColumn === 'a' ? columnValueClass : 'text-white'}`}>
           {player.a}
         </span>
       </div>
@@ -124,8 +139,8 @@ function PlayerRow({ player }: { player: Player }) {
       </div>
 
       {/* MD */}
-      <div className="flex items-start justify-center shrink-0 w-[22px]">
-        <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
+      <div className={`flex items-start justify-center shrink-0 w-[22px] ${isSortedColumn === 'md' ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isSortedColumn === 'md' ? columnValueClass : 'text-[#8e919e]'}`}>
           {player.md}
         </span>
       </div>
@@ -138,10 +153,10 @@ function PlayerRow({ player }: { player: Player }) {
       </div>
 
       {/* Ptos */}
-      <div className="flex items-start justify-end shrink-0 w-12">
+      <div className={`flex items-start justify-end shrink-0 w-12 ${isSortedColumn === null ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
         <span
           className={`font-geist-mono font-extrabold text-[14px] leading-[18px] ${
-            isTop3 ? 'text-[#d2fc38]' : 'text-white'
+            isSortedColumn === null ? 'text-[#d2fc38]' : isTop3 ? 'text-[#d2fc38]' : 'text-white'
           }`}
         >
           {player.ptos}
@@ -219,31 +234,31 @@ export default function PowerRanking({ players }: { players: Player[] }) {
               </span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">J</span>
+              <span className="font-outfit font-extrabold text-[11px] uppercase leading-none text-[#8e919e]">J</span>
             </div>
-            <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">G</span>
+            <div className={`flex items-start justify-center shrink-0 w-5 ${activeTab === 1 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 1 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>G</span>
             </div>
-            <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">A</span>
+            <div className={`flex items-start justify-center shrink-0 w-5 ${activeTab === 2 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 2 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>A</span>
             </div>
             <div className="flex items-start justify-center shrink-0 w-7">
               <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">MVP</span>
             </div>
-            <div className="flex items-start justify-center shrink-0 w-[22px]">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] uppercase leading-none">MD</span>
+            <div className={`flex items-start justify-center shrink-0 w-[22px] ${activeTab === 3 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 3 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>MD</span>
             </div>
-            <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
-              <span className="font-outfit font-extrabold text-[11px] text-[#8e919e] leading-none">P</span>
+            <div className={`flex items-center justify-center shrink-0 w-7 overflow-hidden ${activeTab === 4 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] leading-none ${activeTab === 4 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>P</span>
             </div>
-            <div className="flex items-start justify-end shrink-0 w-12">
-              <span className="font-outfit font-extrabold text-[11px] text-[#d2fc38] uppercase leading-none">Ptos</span>
+            <div className={`flex items-start justify-end shrink-0 w-12 ${activeTab === 0 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 0 ? 'text-[#d2fc38]' : 'text-[#d2fc38]'}`}>Ptos</span>
             </div>
           </div>
 
           {/* Player Rows */}
           {sortedPlayers.map((player) => (
-            <PlayerRow key={player.rank} player={player} />
+            <PlayerRow key={player.rank} player={player} activeTab={activeTab} />
           ))}
         </div>
       </div>
