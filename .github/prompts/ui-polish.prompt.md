@@ -23,20 +23,31 @@ Execution rules:
 
 Task:
 
-{{Phase 1 — Remove Status Bar
-Goal: Remove decorative iPhone chrome and use full screen space.
+{{Phase 2 — Fix Column Alignment
+Goal: Audit table columns and fix misalignment issues, especially POS column.
 
-Steps:
+Discovery needed:
 
-Locate the status bar in PowerRanking.tsx (renders time, signal, wifi, battery icons)
-Remove or delete the status bar JSX section
-Adjust top spacing if needed (remove any pt-[8px] or similar padding intended for the status bar)
-Verify ranking table starts at the very top with clean alignment
-Verification:
+Check PowerRanking.tsx:
 
-Status bar gone ✓
-Table title and header row at top of screen ✓
-No visual artifacts from removal ✓}}
+Current column widths (are they consistent between header and rows?)
+Text alignment per column (POS should be center; stats should be right-aligned)
+Any padding/margin inconsistencies
+Identify POS column issue — is it narrow/wide or misaligned vs header?
+
+Changes:
+
+Column widths: Ensure header <th> and row <td> have matching widths (e.g., w-[40px] for POS, w-[50px] for stat columns)
+Text alignment:
+POS: center-align (rank numbers)
+Name: left-align
+Stats (Pts, G, A, MVP, BD, BP, MP): right-align (numeric alignment)
+Padding/spacing: Use consistent px-2 or px-1 across all columns; remove any conflicting margins
+AI Prompt:
+
+Relevant files:
+
+PowerRanking.tsx — table header and row rendering}}
 
 Examples:
 
