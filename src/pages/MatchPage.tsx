@@ -122,6 +122,11 @@ export default function MatchPage() {
     setAssists((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
   }
 
+  const handleSwitchTeam = (name: string) => {
+    const target = teamA.includes(name) ? 'B' : 'A'
+    moveAthlete(name, target as 'A' | 'B')
+  }
+
   const handleFinish = () => {
     setStep('awards')
   }
@@ -170,6 +175,14 @@ export default function MatchPage() {
     <div key={name} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
       <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
       <div className="flex flex-wrap items-center justify-end gap-2">
+        <button
+          onClick={() => handleSwitchTeam(name)}
+          className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
+          aria-label={`Trocar ${name} de time`}
+          title="Trocar de time"
+        >
+          ↔
+        </button>
         <div className="flex items-center gap-1 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-1 text-xs text-[#d2fc38]">
           <span className="font-semibold">G</span>
           <span className="rounded-full bg-[#d2fc38]/20 px-2 py-0.5 text-[#d2fc38]">{goals[name] ?? 0}</span>
