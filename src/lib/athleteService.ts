@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
 function isPermissionError(error: unknown) {
@@ -64,13 +64,55 @@ export async function checkDuplicates(names: string[]) {
 
 export async function saveAthletes(names: string[]) {
   const normalizedNames = names.map((name) => normalizeName(name)).filter(Boolean)
-  const { newNames } = await checkDuplicates(normalizedNames)
+  const snapshot = await getDocs(collection(db, 'athletes'))
+  const existingByNormalized = new Map<string, { id: string; rawName: string }>()
+
+  snapshot.docs.forEach((snapshotDoc) => {
+    const rawName = String(snapshotDoc.data().name ?? '')
+    const normalized = normalizeName(rawName)
+
+    if (normalized && !existingByNormalized.has(normalized)) {
+      existingByNormalized.set(normalized, { id: snapshotDoc.id, rawName })
+    }
+  })
+
+  const newNames = normalizedNames.filter((name) => !existingByNormalized.has(name))
 
   if (!newNames.length) {
+    for (const name of normalizedNames) {
+      const existing = existingByNormalized.get(name)
+
+      if (existing && existing.rawName !== name) {
+        try {
+          await updateDoc(doc(db, 'athletes', existing.id), { name })
+        } catch (error) {
+          if (isPermissionError(error)) {
+            throw new Error('Firestore permission denied')
+          }
+          throw error
+        }
+      }
+    }
+
     return []
   }
 
   const athletesCollection = collection(db, 'athletes')
+
+  for (const name of normalizedNames) {
+    const existing = existingByNormalized.get(name)
+
+    if (existing && existing.rawName !== name) {
+      try {
+        await updateDoc(doc(db, 'athletes', existing.id), { name })
+      } catch (error) {
+        if (isPermissionError(error)) {
+          throw new Error('Firestore permission denied')
+        }
+        throw error
+      }
+    }
+  }
 
   for (const name of newNames) {
     try {
