@@ -22,7 +22,7 @@ Execution rules:
 
 Task:
 
-{{when cliclking on button name="Confirmar & Salvar", I'm getting the error "Não foi possível salvar a partida. Tente novamente."}}
+{{when cliclking on button name="Confirmar & Salvar", I'm getting the error "updateRankings failed: Firestore transactions require all reads to be executed before all writes. Fix this error."}}
 
 Examples:
 

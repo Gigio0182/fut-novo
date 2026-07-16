@@ -30,10 +30,13 @@ export async function updateRankings(match: Match): Promise<void> {
 
   try {
     await runTransaction(db, async (transaction) => {
-      for (const athleteId of participants) {
-        const rankingRef = doc(db, 'rankings', athleteId)
-        const existing = await transaction.get(rankingRef)
-        const current = existing.exists() ? (existing.data() as RankingEntry) : null
+      const rankingRefs = participants.map((athleteId) => doc(db, 'rankings', athleteId))
+      const existingSnapshots = await Promise.all(rankingRefs.map((rankingRef) => transaction.get(rankingRef)))
+
+      for (let index = 0; index < participants.length; index += 1) {
+        const athleteId = participants[index]
+        const existing = existingSnapshots[index]
+        const current = existing.exists() ? (existing.data() as unknown as RankingEntry) : null
 
         const goals = goalCounts.get(athleteId) ?? 0
         const assists = assistCounts.get(athleteId) ?? 0
@@ -50,7 +53,7 @@ export async function updateRankings(match: Match): Promise<void> {
           bestDefender * 3 +
           badPlayer * -0.5
 
-        transaction.set(rankingRef, {
+        transaction.set(rankingRefs[index], {
           athleteId,
           name: current?.name ?? athleteId,
           matches,
