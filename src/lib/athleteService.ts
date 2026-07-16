@@ -1,6 +1,10 @@
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
+function isPermissionError(error: unknown) {
+  return error instanceof Error && /permission|unauthenticated|permission-denied/i.test(error.message)
+}
+
 function normalizeName(name: string) {
   return name
     .trim()
@@ -56,10 +60,17 @@ export async function saveAthletes(names: string[]) {
   const athletesCollection = collection(db, 'athletes')
 
   for (const name of newNames) {
-    await addDoc(athletesCollection, {
-      name,
-      createdAt: new Date().toISOString(),
-    })
+    try {
+      await addDoc(athletesCollection, {
+        name,
+        createdAt: new Date().toISOString(),
+      })
+    } catch (error) {
+      if (isPermissionError(error)) {
+        throw new Error('Firestore permission denied')
+      }
+      throw error
+    }
   }
 
   return newNames

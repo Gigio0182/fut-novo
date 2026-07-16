@@ -31,12 +31,13 @@ export default function MatchPage() {
   const [assists, setAssists] = useState<Record<string, number>>({})
   const [awards, setAwards] = useState({ mvpId: '', bestDefenderId: '', badPlayerId: '' })
   const [saveMessage, setSaveMessage] = useState('')
+  const [saveError, setSaveError] = useState('')
 
   const players = [...teamA, ...teamB]
   const totalGoalsA = players.filter((name) => teamA.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
   const totalGoalsB = players.filter((name) => teamB.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
   const hasAnyGoal = Object.values(goals).some((count) => count > 0)
-  const canSaveAwards = Boolean(awards.mvpId && awards.bestDefenderId && awards.badPlayerId)
+  const hasPlayers = players.length > 0
 
   const handleUpload = async () => {
     const names = parseAthleteList(rawList)
@@ -60,7 +61,10 @@ export default function MatchPage() {
       setTeamB(names.slice(splitIndex))
       setStep('teams')
     } catch (error) {
-      setUploadError('Não foi possível salvar os atletas. Verifique as permissões do Firestore.')
+      const message = error instanceof Error && error.message === 'Firestore permission denied'
+        ? 'Não foi possível salvar os atletas. Ative as regras do Firestore para permitir escrita na coleção athletes.'
+        : 'Não foi possível salvar os atletas. Verifique as permissões do Firestore.'
+      setUploadError(message)
     } finally {
       setIsSaving(false)
     }
@@ -123,36 +127,45 @@ export default function MatchPage() {
   }
 
   const handleSaveMatch = async () => {
-    const matchData: Omit<Match, 'id'> = {
-      date: new Date().toISOString(),
-      teamA,
-      teamB,
-      goals: Object.entries(goals)
-        .filter(([, count]) => count > 0)
-        .flatMap(([athleteId, count]) =>
-          Array.from({ length: count }, () => ({
-            athleteId,
-            team: teamA.includes(athleteId) ? 'A' : 'B',
-          })),
-        ),
-      assists: Object.entries(assists)
-        .filter(([, count]) => count > 0)
-        .flatMap(([athleteId, count]) =>
-          Array.from({ length: count }, () => ({
-            athleteId,
-            team: teamA.includes(athleteId) ? 'A' : 'B',
-          })),
-        ),
-      mvpId: awards.mvpId || null,
-      bestDefenderId: awards.bestDefenderId || null,
-      badPlayerId: awards.badPlayerId || null,
-      finishedAt: new Date().toISOString(),
-    }
+    setSaveError('')
 
-    const matchId = await saveMatch(matchData)
-    await updateRankings({ id: matchId, ...matchData })
-    setSaveMessage(`Partida salva com sucesso. ID: ${matchId}`)
-    setStep('success')
+    try {
+      const matchData: Omit<Match, 'id'> = {
+        date: new Date().toISOString(),
+        teamA,
+        teamB,
+        goals: Object.entries(goals)
+          .filter(([, count]) => count > 0)
+          .flatMap(([athleteId, count]) =>
+            Array.from({ length: count }, () => ({
+              athleteId,
+              team: teamA.includes(athleteId) ? 'A' : 'B',
+            })),
+          ),
+        assists: Object.entries(assists)
+          .filter(([, count]) => count > 0)
+          .flatMap(([athleteId, count]) =>
+            Array.from({ length: count }, () => ({
+              athleteId,
+              team: teamA.includes(athleteId) ? 'A' : 'B',
+            })),
+          ),
+        mvpId: awards.mvpId || null,
+        bestDefenderId: awards.bestDefenderId || null,
+        badPlayerId: awards.badPlayerId || null,
+        finishedAt: new Date().toISOString(),
+      }
+
+      const matchId = await saveMatch(matchData)
+      await updateRankings({ id: matchId, ...matchData })
+      setSaveMessage(`Partida salva com sucesso. ID: ${matchId}`)
+      setStep('success')
+    } catch (error) {
+      const message = error instanceof Error && /permission|unauthenticated|permission-denied/i.test(error.message)
+        ? 'Não foi possível salvar a partida. Ative as regras do Firestore para permitir escrita nas coleções matches e rankings.'
+        : 'Não foi possível salvar a partida. Tente novamente.'
+      setSaveError(message)
+    }
   }
 
   const renderPlayerRow = (name: string) => (
@@ -397,8 +410,9 @@ export default function MatchPage() {
               </label>
             </div>
 
+            {saveError ? <p className="text-sm text-red-300">{saveError}</p> : null}
             <button
-              disabled={!canSaveAwards}
+              disabled={!hasPlayers}
               onClick={handleSaveMatch}
               className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-50"
             >
