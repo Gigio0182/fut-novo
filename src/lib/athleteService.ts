@@ -22,8 +22,15 @@ export function parseAthleteList(raw: string): string[] {
     const trimmed = line.trim()
     if (!trimmed) return
 
-    const match = trimmed.match(/^(\d+)[.-]\s*(.+)$/)
-    const value = match?.[2] ?? trimmed
+    const value = trimmed
+      .replace(/^\d+\.\s*/, '')
+      .replace(/^\d+\s*-\s*/, '')
+      .trim()
+
+    if (!value || !/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(value)) {
+      return
+    }
+
     const normalized = normalizeName(value)
 
     if (normalized) {
