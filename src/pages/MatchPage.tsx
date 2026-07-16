@@ -161,9 +161,7 @@ export default function MatchPage() {
       setSaveMessage(`Partida salva com sucesso. ID: ${matchId}`)
       setStep('success')
     } catch (error) {
-      const message = error instanceof Error && /permission|unauthenticated|permission-denied/i.test(error.message)
-        ? 'Não foi possível salvar a partida. Ative as regras do Firestore para permitir escrita nas coleções matches e rankings.'
-        : 'Não foi possível salvar a partida. Tente novamente.'
+      const message = error instanceof Error ? error.message : 'Não foi possível salvar a partida. Tente novamente.'
       setSaveError(message)
     }
   }

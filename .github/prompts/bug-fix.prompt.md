@@ -22,7 +22,7 @@ Execution rules:
 
 Task:
 
-{{button name="Confirmar & Salvar" still not doing anything. No error message displayed, but firebase rules already alllowerd to write matches}}
+{{when cliclking on button name="Confirmar & Salvar", I'm getting the error "Não foi possível salvar a partida. Tente novamente."}}
 
 Examples:
 
