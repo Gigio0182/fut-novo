@@ -1,8 +1,3 @@
-// Status bar icon assets from Figma (valid 7 days)
-const imgIosSignal = 'https://www.figma.com/api/mcp/asset/6463bf9d-f031-4798-a3c5-15d1697f15e0';
-const imgIosWifi = 'https://www.figma.com/api/mcp/asset/5a5e0003-a01e-48ce-8ac4-db31461381da';
-const imgIosBattery = 'https://www.figma.com/api/mcp/asset/79fa6f99-e62e-4660-abd4-d1f771380581';
-
 interface Player {
   rank: number;
   name: string;
@@ -156,19 +151,9 @@ function PlayerRow({ player }: { player: Player }) {
 
 export default function PowerRanking({ players }: { players: Player[] }) {
   return (
-    <div className="flex flex-col items-start bg-[#0a0a0c] w-[402px] h-[903px] overflow-hidden">
-      {/* Status Bar */}
-      <div className="flex items-center justify-between px-5 h-10 w-full shrink-0">
-        <span className="font-outfit font-semibold text-[14px] text-white leading-none">9:41</span>
-        <div className="flex gap-1.5 items-center">
-          <img src={imgIosSignal}  alt="" className="size-[18px]" />
-          <img src={imgIosWifi}    alt="" className="size-[18px]" />
-          <img src={imgIosBattery} alt="" className="h-[18px] w-[26px]" />
-        </div>
-      </div>
-
+    <div className="flex min-h-screen w-full flex-col items-start overflow-hidden bg-[#0a0a0c]">
       {/* Hero Header */}
-      <div className="flex flex-col gap-4 items-start pb-5 pt-3 px-4 w-full shrink-0">
+      <div className="flex flex-col gap-4 items-start pb-5 pt-2 px-4 w-full shrink-0">
         <h1 className="font-inter font-bold text-[22px] text-[#d2fc38] leading-none whitespace-nowrap">
           Craques da Volvo
         </h1>

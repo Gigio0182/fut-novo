@@ -23,7 +23,20 @@ Execution rules:
 
 Task:
 
-{{input}}
+{{Phase 1 — Remove Status Bar
+Goal: Remove decorative iPhone chrome and use full screen space.
+
+Steps:
+
+Locate the status bar in PowerRanking.tsx (renders time, signal, wifi, battery icons)
+Remove or delete the status bar JSX section
+Adjust top spacing if needed (remove any pt-[8px] or similar padding intended for the status bar)
+Verify ranking table starts at the very top with clean alignment
+Verification:
+
+Status bar gone ✓
+Table title and header row at top of screen ✓
+No visual artifacts from removal ✓}}
 
 Examples:
 
