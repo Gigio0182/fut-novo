@@ -6,23 +6,6 @@ import type { Match } from '../types'
 
 type Step = 'upload' | 'teams' | 'scoring' | 'awards' | 'success'
 
-type TeamSide = 'A' | 'B'
-
-interface GoalEntry {
-  scorerId: string
-  scorerTeam: TeamSide
-  assistId: string | null
-  assistTeam: TeamSide | null
-  ownGoal: boolean
-}
-
-interface GoalDialogState {
-  scorerId: string
-  scorerTeam: TeamSide
-  assistId: string
-  ownGoal: boolean
-}
-
 function formatName(value: string) {
   return value
     .trim()
@@ -44,31 +27,18 @@ export default function MatchPage() {
   const [manualError, setManualError] = useState('')
   const [uploadError, setUploadError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
-  const [goalEntries, setGoalEntries] = useState<GoalEntry[]>([])
+  const [goals, setGoals] = useState<Record<string, number>>({})
+  const [assists, setAssists] = useState<Record<string, number>>({})
   const [awards, setAwards] = useState({ mvpId: '', bestDefenderId: '', badPlayerId: '' })
   const [saveMessage, setSaveMessage] = useState('')
   const [saveError, setSaveError] = useState('')
-  const [goalDialog, setGoalDialog] = useState<GoalDialogState | null>(null)
+  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null)
 
   const players = [...teamA, ...teamB]
-  const totalGoalsA = goalEntries.reduce((total, entry) => {
-    if (entry.scorerTeam === 'A') {
-      return total + (entry.ownGoal ? 0 : 1)
-    }
-
-    return total + (entry.ownGoal ? 1 : 0)
-  }, 0)
-  const totalGoalsB = goalEntries.reduce((total, entry) => {
-    if (entry.scorerTeam === 'B') {
-      return total + (entry.ownGoal ? 0 : 1)
-    }
-
-    return total + (entry.ownGoal ? 1 : 0)
-  }, 0)
-  const hasAnyGoal = goalEntries.length > 0
+  const totalGoalsA = players.filter((name) => teamA.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
+  const totalGoalsB = players.filter((name) => teamB.includes(name)).reduce((total, name) => total + (goals[name] ?? 0), 0)
+  const hasAnyGoal = Object.values(goals).some((count) => count > 0)
   const hasPlayers = players.length > 0
-
-  const getPlayerTeam = (name: string): TeamSide => (teamA.includes(name) ? 'A' : 'B')
 
   const handleUpload = async () => {
     const names = parseAthleteList(rawList)
@@ -133,8 +103,24 @@ export default function MatchPage() {
   const removeAthlete = (name: string) => {
     setTeamA((prev) => prev.filter((item) => item !== name))
     setTeamB((prev) => prev.filter((item) => item !== name))
-    setGoalEntries((prev) => prev.filter((entry) => entry.scorerId !== name && entry.assistId !== name))
-    setGoalDialog((prev) => (prev?.scorerId === name || prev?.assistId === name ? null : prev))
+    setGoals((prev) => {
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+    setAssists((prev) => {
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
+
+  const updateGoal = (name: string, delta: number) => {
+    setGoals((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
+  }
+
+  const updateAssist = (name: string, delta: number) => {
+    setAssists((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
   }
 
   const handleSwitchTeam = (name: string) => {
@@ -142,35 +128,8 @@ export default function MatchPage() {
     moveAthlete(name, target as 'A' | 'B')
   }
 
-  const openGoalDialog = (name: string) => {
-    setGoalDialog({
-      scorerId: name,
-      scorerTeam: getPlayerTeam(name),
-      assistId: '',
-      ownGoal: false,
-    })
-  }
-
-  const closeGoalDialog = () => {
-    setGoalDialog(null)
-  }
-
-  const confirmGoalDialog = () => {
-    if (!goalDialog) {
-      return
-    }
-
-    setGoalEntries((prev) => [
-      ...prev,
-      {
-        scorerId: goalDialog.scorerId,
-        scorerTeam: goalDialog.scorerTeam,
-        assistId: goalDialog.assistId || null,
-        assistTeam: goalDialog.assistId ? goalDialog.scorerTeam : null,
-        ownGoal: goalDialog.ownGoal,
-      },
-    ])
-    closeGoalDialog()
+  const handleExpandRow = (name: string) => {
+    setExpandedPlayer((prev) => (prev === name ? null : name))
   }
 
   const handleFinish = () => {
@@ -185,16 +144,22 @@ export default function MatchPage() {
         date: new Date().toISOString(),
         teamA,
         teamB,
-        goals: goalEntries.map((entry) => ({
-          athleteId: entry.scorerId,
-          team: entry.ownGoal ? (entry.scorerTeam === 'A' ? 'B' : 'A') : entry.scorerTeam,
-        })),
-        assists: goalEntries
-          .filter((entry) => entry.assistId && entry.assistTeam)
-          .map((entry) => ({
-            athleteId: entry.assistId as string,
-            team: entry.assistTeam as TeamSide,
-          })),
+        goals: Object.entries(goals)
+          .filter(([, count]) => count > 0)
+          .flatMap(([athleteId, count]) =>
+            Array.from({ length: count }, () => ({
+              athleteId,
+              team: teamA.includes(athleteId) ? 'A' : 'B',
+            })),
+          ),
+        assists: Object.entries(assists)
+          .filter(([, count]) => count > 0)
+          .flatMap(([athleteId, count]) =>
+            Array.from({ length: count }, () => ({
+              athleteId,
+              team: teamA.includes(athleteId) ? 'A' : 'B',
+            })),
+          ),
         mvpId: awards.mvpId || null,
         bestDefenderId: awards.bestDefenderId || null,
         badPlayerId: awards.badPlayerId || null,
@@ -212,17 +177,21 @@ export default function MatchPage() {
   }
 
   const renderPlayerRow = (name: string) => {
+    const isExpanded = expandedPlayer === name
+
     return (
       <div key={name} className="overflow-hidden rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
         <div className="flex items-center justify-between gap-3">
           <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
           <div className="flex flex-wrap items-center justify-end gap-2">
-            <button
-              onClick={() => openGoalDialog(name)}
-              className="rounded-full bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c] transition hover:bg-[#ddff5c]"
-            >
-              GOL
-            </button>
+            <div className="flex items-center gap-1 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-1 text-xs text-[#d2fc38]">
+              <span className="font-semibold">G</span>
+              <span className="rounded-full bg-[#d2fc38]/20 px-2 py-0.5 text-[#d2fc38]">{goals[name] ?? 0}</span>
+            </div>
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#8e919e]">
+              <span className="font-semibold">A</span>
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-white">{assists[name] ?? 0}</span>
+            </div>
             <button
               onClick={() => handleSwitchTeam(name)}
               className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
@@ -231,15 +200,27 @@ export default function MatchPage() {
             >
               ↔
             </button>
+            <button
+              onClick={() => handleExpandRow(name)}
+              className="rounded-full border border-white/10 bg-white/5 p-1.5 text-[12px] text-[#8e919e] transition hover:bg-white/10"
+              aria-label={isExpanded ? 'Recolher controles' : 'Expandir controles'}
+              title={isExpanded ? 'Recolher' : 'Expandir'}
+            >
+              {isExpanded ? '↑' : '↓'}
+            </button>
+          </div>
+        </div>
+        <div className={`overflow-hidden transition-[max-height,opacity] duration-200 ${isExpanded ? 'mt-3 max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => updateGoal(name, 1)} className="rounded-full bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c]">+Goal</button>
+            <button onClick={() => updateGoal(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Goal</button>
+            <button onClick={() => updateAssist(name, 1)} className="rounded-full bg-[#d2fc38]/15 px-3 py-1.5 text-[11px] font-semibold text-[#d2fc38]">+Assist</button>
+            <button onClick={() => updateAssist(name, -1)} className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] text-white">−Assist</button>
           </div>
         </div>
       </div>
     )
   }
-
-  const goalDialogTeamPlayers = goalDialog
-    ? (goalDialog.scorerTeam === 'A' ? teamA : teamB).filter((playerName) => playerName !== goalDialog.scorerId)
-    : []
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
@@ -399,67 +380,6 @@ export default function MatchPage() {
             >
               Finish Match
             </button>
-
-            {goalDialog ? (
-              <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 px-4 py-6 sm:items-center">
-                <div className="w-full max-w-[420px] rounded-[28px] border border-white/10 bg-[#111218] p-4 shadow-2xl">
-                  <h3 className="text-lg font-semibold text-[#d2fc38]">Registrar gol</h3>
-                  <p className="mt-1 text-sm text-[#8e919e]">Jogador: {goalDialog.scorerId}</p>
-
-                  <label className="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0a0a0c] px-3 py-3 text-sm text-white">
-                    <input
-                      type="checkbox"
-                      checked={goalDialog.ownGoal}
-                      onChange={(event) =>
-                        setGoalDialog((prev) => (prev ? { ...prev, ownGoal: event.target.checked } : prev))
-                      }
-                      className="size-4 accent-[#d2fc38]"
-                    />
-                    <span>Gol contra</span>
-                  </label>
-
-                  <div className="mt-4 space-y-2">
-                    <p className="text-sm text-[#8e919e]">Assistente</p>
-                    <div className="max-h-40 space-y-2 overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0c] p-2">
-                      <button
-                        type="button"
-                        onClick={() => setGoalDialog((prev) => (prev ? { ...prev, assistId: '' } : prev))}
-                        className={`w-full rounded-2xl px-3 py-2 text-left text-sm transition ${goalDialog.assistId === '' ? 'bg-[#d2fc38] text-[#0a0a0c]' : 'bg-white/5 text-white hover:bg-white/10'}`}
-                      >
-                        Sem assistencia
-                      </button>
-                      {goalDialogTeamPlayers.map((playerName) => (
-                        <button
-                          key={playerName}
-                          type="button"
-                          onClick={() => setGoalDialog((prev) => (prev ? { ...prev, assistId: playerName } : prev))}
-                          className={`w-full rounded-2xl px-3 py-2 text-left text-sm transition ${goalDialog.assistId === playerName ? 'bg-[#d2fc38] text-[#0a0a0c]' : 'bg-white/5 text-white hover:bg-white/10'}`}
-                        >
-                          {playerName}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex gap-3">
-                    <button
-                      type="button"
-                      onClick={closeGoalDialog}
-                      className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 font-semibold text-white"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={confirmGoalDialog}
-                      className="flex-1 rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]"
-                    >
-                      Confirmar gol
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : null}
           </div>
         ) : step === 'awards' ? (
           <div className="space-y-4">

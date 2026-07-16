@@ -5,9 +5,18 @@ function isPermissionError(error: unknown) {
   return error instanceof Error && /permission|unauthenticated|permission-denied/i.test(error.message)
 }
 
-function normalizeName(name: string) {
-  return name
+function stripListPrefix(value: string) {
+  return value
+    .replace(/^\d+\.\s*/, '')
+    .replace(/^\d+\s*-\s*/, '')
+    .replace(/^\d+\s+/, '')
     .trim()
+}
+
+function normalizeName(name: string) {
+  const cleaned = stripListPrefix(name.trim())
+
+  return cleaned
     .toLowerCase()
     .split(/\s+/)
     .filter(Boolean)
@@ -22,10 +31,7 @@ export function parseAthleteList(raw: string): string[] {
     const trimmed = line.trim()
     if (!trimmed) return
 
-    const value = trimmed
-      .replace(/^\d+\.\s*/, '')
-      .replace(/^\d+\s*-\s*/, '')
-      .trim()
+    const value = stripListPrefix(trimmed)
 
     if (!value || !/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(value)) {
       return
