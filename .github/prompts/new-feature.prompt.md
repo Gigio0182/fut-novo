@@ -22,7 +22,10 @@ Execution rules:
 
 Task:
 
-{{input}}
+Plan: Ranking Page Filter/Sort by Tabs
+TL;DR: Make the filter tabs clickable and functional. Each tab sorts the player list by a specific metric and highlights the active tab. Current tabs are styled but non-functional; this adds sorting logic and state management.
+
+
 
 Examples:
 

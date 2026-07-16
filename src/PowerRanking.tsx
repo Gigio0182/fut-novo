@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react'
+
 interface Player {
   rank: number;
   name: string;
@@ -150,6 +152,24 @@ function PlayerRow({ player }: { player: Player }) {
 }
 
 export default function PowerRanking({ players }: { players: Player[] }) {
+  const [activeTab, setActiveTab] = useState(0)
+  const sortedPlayers = useMemo(() => {
+    const nextPlayers = [...players]
+
+    switch (activeTab) {
+      case 1:
+        return nextPlayers.sort((a, b) => b.g - a.g)
+      case 2:
+        return nextPlayers.sort((a, b) => b.a - a.a)
+      case 3:
+        return nextPlayers.sort((a, b) => b.md - a.md)
+      case 4:
+        return nextPlayers.sort((a, b) => b.p - a.p)
+      default:
+        return nextPlayers.sort((a, b) => a.rank - b.rank)
+    }
+  }, [activeTab, players])
+
   return (
     <div className="flex min-h-screen w-full flex-col items-start overflow-hidden bg-[#0a0a0c]">
       {/* Hero Header */}
@@ -161,10 +181,12 @@ export default function PowerRanking({ players }: { players: Player[] }) {
         {/* Filter tabs — horizontal scroll, no wrap */}
         <div className="flex gap-2 items-start overflow-x-auto overflow-y-hidden w-full shrink-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {TABS.map((tab, i) => (
-            <div
+            <button
               key={tab}
+              type="button"
+              onClick={() => setActiveTab(i)}
               className={`flex items-center px-4 py-2 rounded-lg shrink-0 ${
-                i === 0
+                i === activeTab
                   ? 'bg-[#d2fc38]'
                   : 'bg-[#111218] border border-[#1f212d]'
               }`}
@@ -176,7 +198,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
               >
                 {tab}
               </span>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -220,7 +242,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
           </div>
 
           {/* Player Rows */}
-          {players.map((player) => (
+          {sortedPlayers.map((player) => (
             <PlayerRow key={player.rank} player={player} />
           ))}
         </div>
