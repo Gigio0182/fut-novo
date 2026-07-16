@@ -6,6 +6,17 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : 'Unknown error'
 }
 
+function normalizeRankingName(name: string) {
+  const trimmed = name.trim()
+
+  if (!trimmed) {
+    return ''
+  }
+
+  const lower = trimmed.toLowerCase()
+  return lower.charAt(0).toUpperCase() + lower.slice(1)
+}
+
 export async function saveMatch(match: Omit<Match, 'id'>): Promise<string> {
   try {
     const docRef = await addDoc(collection(db, 'matches'), match)
@@ -55,7 +66,7 @@ export async function updateRankings(match: Match): Promise<void> {
 
         transaction.set(rankingRefs[index], {
           athleteId,
-          name: current?.name ?? athleteId,
+          name: normalizeRankingName(current?.name ?? athleteId),
           matches,
           goals: (current?.goals ?? 0) + goals,
           assists: (current?.assists ?? 0) + assists,
