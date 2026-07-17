@@ -298,13 +298,13 @@ export default function MatchPage() {
 
   const renderPlayerRow = (name: string) => {
     return (
-      <div key={name} className="overflow-hidden rounded-2xl border border-white/10 bg-[#111218] px-3 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <span className="min-w-0 flex-1 text-sm font-medium text-white">{name}</span>
+      <div key={name} className="overflow-hidden rounded-2xl border border-white/10 bg-[#111218] px-3 py-2 sm:py-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          <span className="min-w-0 flex-1 text-base font-semibold leading-tight text-white sm:text-lg">{name}</span>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <button
               onClick={() => handleSwitchTeam(name)}
-              className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1.5 text-[12px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20"
+              className="rounded-full border border-[#d2fc38]/25 bg-[#d2fc38]/10 p-1 text-[11px] text-[#d2fc38] transition hover:bg-[#d2fc38]/20 sm:p-1.5 sm:text-[12px]"
               aria-label={`Trocar ${name} de time`}
               title="Trocar de time"
             >
@@ -312,7 +312,7 @@ export default function MatchPage() {
             </button>
             <button
               onClick={() => openGoalModal(name)}
-              className="rounded-full border border-[#d2fc38]/20 bg-[#d2fc38] px-3 py-1.5 text-[11px] font-semibold text-[#0a0a0c] transition hover:brightness-95"
+              className="rounded-full border border-[#d2fc38]/20 bg-[#d2fc38] px-3 py-1 text-[11px] font-semibold text-[#0a0a0c] transition hover:brightness-95 sm:py-1.5"
               aria-label={`Registrar gol para ${name}`}
               title="Registrar gol"
             >
