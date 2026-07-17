@@ -435,9 +435,9 @@ export default function MatchPage() {
               <p className="mb-2 text-sm font-semibold text-[#d2fc38]">Lista total</p>
               <div className="flex flex-wrap gap-2">
                 {players.map((name) => (
-                  <div key={name} className="inline-flex w-fit max-w-full items-center gap-1 rounded-full border border-white/10 bg-white/10 px-2 py-0 text-[10px] leading-none text-white">
+                  <div key={name} className="inline-flex w-fit max-w-full items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs leading-none text-white sm:text-sm">
                     <span>{name}</span>
-                    <button onClick={() => removeAthlete(name)} className="text-[#d2fc38]">
+                    <button onClick={() => removeAthlete(name)} className="rounded px-1 text-sm leading-none text-[#d2fc38]">
                       ×
                     </button>
                   </div>
