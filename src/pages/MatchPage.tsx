@@ -487,13 +487,21 @@ export default function MatchPage() {
               </div>
             </div>
 
-            <button
-              disabled={!hasAnyGoal}
-              className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-50"
-              onClick={handleFinish}
-            >
-              Finish Match
-            </button>
+            <div className="grid grid-cols-[1fr_auto] gap-2">
+              <button
+                disabled={!hasAnyGoal}
+                className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={handleFinish}
+              >
+                Finish Match
+              </button>
+              <button
+                onClick={handleCancelSetup}
+                className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Cancel
+              </button>
+            </div>
 
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
