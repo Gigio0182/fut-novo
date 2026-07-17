@@ -540,17 +540,41 @@ export default function MatchPage() {
                   </label>
 
                   <div className="mt-3">
-                    <p className="mb-2 text-sm text-[#8e919e]">Assistencia</p>
+                    <p className="mb-2 text-sm font-medium text-[#8e919e]">Assistencia</p>
                     <button
                       disabled={goalModalOwnGoal}
                       onClick={() => setShowAssistList((prev) => !prev)}
-                      className="w-full rounded-2xl border border-white/10 bg-[#0a0a0c] px-3 py-2 text-left text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                      className={`w-full rounded-2xl border px-3 py-2.5 text-left text-sm text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                        goalModalOwnGoal
+                          ? 'border-white/10 bg-[#0a0a0c]'
+                          : showAssistList
+                            ? 'border-[#d2fc38]/45 bg-[#d2fc38]/10 shadow-[0_0_0_1px_rgba(210,252,56,0.2)]'
+                            : 'border-white/15 bg-[#0a0a0c] hover:border-white/25 hover:bg-white/[0.03]'
+                      }`}
+                      aria-expanded={showAssistList}
+                      aria-label="Abrir lista de assistentes"
                     >
-                      {goalModalAssist || 'Selecionar assistente'}
+                      <span className="flex items-center justify-between gap-3">
+                        <span className={goalModalAssist ? 'text-white' : 'text-[#8e919e]'}>
+                          {goalModalAssist || 'Selecionar assistente'}
+                        </span>
+                        <span className="text-xs text-[#8e919e]">{showAssistList ? '▲' : '▼'}</span>
+                      </span>
                     </button>
+                    {!goalModalOwnGoal ? <p className="mt-1 text-[11px] text-[#6f7380]">Toque para abrir a lista de jogadores do mesmo time.</p> : null}
 
                     {showAssistList && !goalModalOwnGoal ? (
-                      <div className="mt-2 max-h-40 overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0c]">
+                      <div className="mt-2 max-h-44 overflow-y-auto rounded-2xl border border-[#d2fc38]/25 bg-[#0a0a0c] shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
+                        <button
+                          onClick={() => {
+                            setGoalModalAssist('')
+                            setShowAssistList(false)
+                            setGoalModalError('')
+                          }}
+                          className="block w-full border-b border-white/10 px-3 py-2 text-left text-sm text-[#8e919e] hover:bg-white/5"
+                        >
+                          Sem assistencia
+                        </button>
                         {goalModalTeamPlayers.length === 0 ? (
                           <p className="px-3 py-2 text-sm text-[#8e919e]">Sem outro jogador disponivel.</p>
                         ) : (
@@ -562,9 +586,12 @@ export default function MatchPage() {
                                 setShowAssistList(false)
                                 setGoalModalError('')
                               }}
-                              className="block w-full border-b border-white/5 px-3 py-2 text-left text-sm text-white last:border-b-0 hover:bg-white/5"
+                              className="block w-full border-b border-white/10 px-3 py-2 text-left text-sm text-white last:border-b-0 hover:bg-white/5"
                             >
-                              {name}
+                              <span className="flex items-center justify-between gap-2">
+                                <span>{name}</span>
+                                {goalModalAssist === name ? <span className="text-[10px] text-[#d2fc38]">Selecionado</span> : null}
+                              </span>
                             </button>
                           ))
                         )}
