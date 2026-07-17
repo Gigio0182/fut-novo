@@ -332,6 +332,35 @@ interface MatchSummaryPayload {
 }
 ```
 
+### 10.1 Current Post-Finish Summary Export (Repository Behavior)
+
+After a successful match save in `src/pages/MatchPage.tsx` (success step):
+
+1. User can tap `Compartilhar Súmula (.txt)`.
+2. The system generates a text summary with this structure:
+
+- `Súmula do fut - <date/time>`
+- `Placar: Time A <goals> x <goals> Time B`
+- `Escalações` for Time A and Time B
+- `Eventos` with one line per athlete and computed match points
+- `Prêmios` (MVP, Melhor Defensor, Pior em Campo when present)
+
+3. Points in summary are calculated per athlete using current match rule:
+
+- Base `0.5`
+- Goal `+2.5`
+- Assist `+1.5`
+- MVP `+3`
+- Melhor Defensor `+3`
+- Pior em Campo `-0.5`
+
+4. Export strategy:
+
+- Prefer Web Share API with attached `.txt` file when supported.
+- Fallback to local `.txt` file download when share is unavailable.
+
+Summary export is a convenience artifact and does not mutate persisted match or ranking data.
+
 ## 11. Ranking Integration
 
 After `finished`, update ranking data in this order:
@@ -438,6 +467,7 @@ Implemented now:
 - Match data is persisted in Firestore collection `matches`.
 - Ranking aggregation is applied in Firestore collection `rankings` through transactional updates.
 - Goal, assist, MVP, best defender, and bad player counters are accumulated per participant.
+- Success step can export/share a `.txt` match summary (Súmula) with score, lineups, events, points, and awards.
 
 Not implemented yet (still target behavior from this spec):
 

@@ -222,6 +222,7 @@ From match finalization:
 - `finished` match emits aggregated stat updates.
 - Ranking updates exactly once per finished match.
 - Page refreshes to show latest standings.
+- Match success step may also produce a `.txt` post-match summary (Súmula) for sharing/download; this artifact is read-only and does not alter ranking aggregation.
 
 Current repository detail:
 
