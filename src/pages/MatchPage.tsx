@@ -329,7 +329,7 @@ export default function MatchPage() {
     : []
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
+    <div className="flex min-h-[calc(100dvh-80px)] items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
       <div className="w-full max-w-[420px] rounded-[32px] border border-white/10 bg-[#111218] p-4 shadow-2xl sm:p-5">
         <div className="mb-5 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#16181f] to-[#0d0f13] p-4">
           <h1 className="text-center text-2xl font-bold text-[#d2fc38]">Craques da Volvo</h1>
@@ -342,7 +342,7 @@ export default function MatchPage() {
               <textarea
                 value={rawList}
                 onChange={(event) => setRawList(event.target.value)}
-                className="mt-2 min-h-[140px] w-full rounded-2xl border border-[#d2fc38]/70 bg-[#d2fc38]/10 p-3 text-base text-white outline-none shadow-[0_0_0_1px_rgba(210,252,56,0.2)] focus:border-[#d2fc38] focus:bg-[#d2fc38]/15 sm:text-sm"
+                className="mt-2 min-h-[140px] w-full overflow-y-auto rounded-2xl border border-[#d2fc38]/70 bg-[#d2fc38]/10 p-3 text-base text-white outline-none shadow-[0_0_0_1px_rgba(210,252,56,0.2)] focus:border-[#d2fc38] focus:bg-[#d2fc38]/15 sm:text-sm"
                 placeholder="1. João Silva\n2-Maria Souza"
               />
             </label>
