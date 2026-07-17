@@ -23,6 +23,98 @@ function formatName(value: string) {
     .join(' ')
 }
 
+function formatPoints(value: number) {
+  return value.toFixed(1).replace('.', ',')
+}
+
+function formatMatchDateTime(value: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value))
+}
+
+function buildMatchSummary(match: Omit<Match, 'id'>) {
+  const allPlayers = [...match.teamA, ...match.teamB]
+  const goalCounts = new Map<string, number>()
+  const assistCounts = new Map<string, number>()
+
+  match.goals.forEach((goal) => {
+    goalCounts.set(goal.athleteId, (goalCounts.get(goal.athleteId) ?? 0) + 1)
+  })
+
+  match.assists.forEach((assist) => {
+    assistCounts.set(assist.athleteId, (assistCounts.get(assist.athleteId) ?? 0) + 1)
+  })
+
+  const ownGoalsA = (match.ownGoals ?? []).filter((event) => event.team === 'A').length
+  const ownGoalsB = (match.ownGoals ?? []).filter((event) => event.team === 'B').length
+  const regularGoalsA = match.goals.filter((goal) => goal.team === 'A').length
+  const regularGoalsB = match.goals.filter((goal) => goal.team === 'B').length
+  const totalGoalsA = regularGoalsA + ownGoalsB
+  const totalGoalsB = regularGoalsB + ownGoalsA
+
+  const eventLines = allPlayers.map((name) => {
+    const goals = goalCounts.get(name) ?? 0
+    const assists = assistCounts.get(name) ?? 0
+
+    const points =
+      0.5 +
+      goals * 2.5 +
+      assists * 1.5 +
+      (match.mvpId === name ? 3 : 0) +
+      (match.bestDefenderId === name ? 3 : 0) +
+      (match.badPlayerId === name ? -0.5 : 0)
+
+    const details: string[] = []
+
+    if (goals > 0) {
+      details.push(`${goals} ${goals === 1 ? 'gol' : 'gols'}`)
+    }
+
+    if (assists > 0) {
+      details.push(`${assists} ${assists === 1 ? 'assist' : 'assists'}`)
+    }
+
+    return details.length > 0
+      ? `${name} (${formatPoints(points)} pts) - ${details.join(' e ')}.`
+      : `${name} (${formatPoints(points)} pts).`
+  })
+
+  const awardLines: string[] = []
+
+  if (match.mvpId) {
+    awardLines.push(`${match.mvpId} - MVP`)
+  }
+
+  if (match.bestDefenderId) {
+    awardLines.push(`${match.bestDefenderId} - Melhor Defensor`)
+  }
+
+  if (match.badPlayerId) {
+    awardLines.push(`${match.badPlayerId} - Pior em Campo`)
+  }
+
+  if (awardLines.length === 0) {
+    awardLines.push('Sem prêmios.')
+  }
+
+  return [
+    `1. Súmula do fut - ${formatMatchDateTime(match.finishedAt)}`,
+    `2. Placar: Time A ${totalGoalsA} x ${totalGoalsB} Time B`,
+    '3. Escalações:',
+    `Time A: ${match.teamA.join(', ')}`,
+    `Time B: ${match.teamB.join(', ')}`,
+    '4. Eventos',
+    ...eventLines,
+    '5. Prêmios',
+    ...awardLines,
+  ].join('\n')
+}
+
 export default function MatchPage() {
   const navigate = useNavigate()
   const [rawList, setRawList] = useState('')
@@ -47,6 +139,8 @@ export default function MatchPage() {
   const [showAssistList, setShowAssistList] = useState(false)
   const [goalModalError, setGoalModalError] = useState('')
   const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([])
+  const [savedMatchData, setSavedMatchData] = useState<Omit<Match, 'id'> | null>(null)
+  const [shareStatus, setShareStatus] = useState('')
 
   const players = [...teamA, ...teamB]
   const regularGoalsA = teamA.reduce((total, name) => total + (goals[name] ?? 0), 0)
@@ -251,8 +345,53 @@ export default function MatchPage() {
     setAssists({})
     setOwnGoalEvents([])
     setScoringEvents([])
+    setSavedMatchData(null)
+    setShareStatus('')
     closeGoalModal()
     setStep('upload')
+  }
+
+  const handleShareSummary = async () => {
+    if (!savedMatchData) {
+      return
+    }
+
+    const summary = buildMatchSummary(savedMatchData)
+    const fileName = `sumula-fut-${savedMatchData.finishedAt.slice(0, 16).replace(/[:T]/g, '-')}.txt`
+    const blob = new Blob([summary], { type: 'text/plain;charset=utf-8' })
+
+    try {
+      if (typeof navigator.share === 'function') {
+        const shareFile = new File([blob], fileName, { type: blob.type })
+
+        if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [shareFile] })) {
+          await navigator.share({
+            title: 'Súmula do fut',
+            text: 'Compartilhando súmula da partida',
+            files: [shareFile],
+          })
+          setShareStatus('Súmula compartilhada com sucesso.')
+          return
+        }
+      }
+    } catch (error) {
+      const isAbortError = error instanceof DOMException && error.name === 'AbortError'
+
+      if (isAbortError) {
+        setShareStatus('Compartilhamento cancelado.')
+        return
+      }
+    }
+
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = fileName
+    document.body.append(anchor)
+    anchor.click()
+    anchor.remove()
+    URL.revokeObjectURL(url)
+    setShareStatus('Arquivo .txt baixado com sucesso.')
   }
 
   const handleSaveMatch = async () => {
@@ -288,6 +427,8 @@ export default function MatchPage() {
 
       const matchId = await saveMatch(matchData)
       await updateRankings({ id: matchId, ...matchData })
+      setSavedMatchData(matchData)
+      setShareStatus('')
       setSaveMessage(`Partida salva com sucesso. ID: ${matchId}`)
       setStep('success')
     } catch (error) {
@@ -705,6 +846,10 @@ export default function MatchPage() {
           <div className="space-y-4 rounded-2xl border border-[#d2fc38]/30 bg-[#0a0a0c] p-4 text-center">
             <h2 className="text-xl font-semibold text-[#d2fc38]">Partida salva!</h2>
             <p className="text-sm text-[#8e919e]">{saveMessage}</p>
+            <button onClick={handleShareSummary} className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]">
+              Compartilhar Súmula (.txt)
+            </button>
+            {shareStatus ? <p className="text-sm text-[#8e919e]">{shareStatus}</p> : null}
             <button onClick={() => navigate('/ranking')} className="w-full rounded-2xl border border-[#d2fc38]/40 px-4 py-3 font-semibold text-[#d2fc38]">
               Go to Ranking
             </button>
