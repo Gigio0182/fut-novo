@@ -119,6 +119,24 @@ Roster validation:
 
 ## 6. Match Lifecycle (Until Finished)
 
+### 6.1 Current In-Progress UI Event Capture (Repository Behavior)
+
+In the current repository flow (`src/pages/MatchPage.tsx`), scoring events are captured through a per-athlete interaction:
+
+1. User clicks `GOL` on a player row.
+2. A modal opens with:
+
+- `Gol contra` checkbox.
+- Optional assist picker listing only players from the same team (excluding the scorer).
+- `Confirmar` and `Cancelar` actions.
+
+3. On confirm:
+
+- Normal goal -> scorer receives goal and optional assistant receives assist.
+- Own goal -> opponent score is incremented by own-goal rule.
+
+4. A visible events list is updated in scoring screen for operator traceability.
+
 ## Phase A - Draft
 
 - Match exists but is not playable yet.
@@ -231,6 +249,7 @@ Event rules:
 2. Events must reference a valid `matchId`.
 3. Team or athlete references must belong to this match context.
 4. Events rejected if state does not allow them.
+5. During local UI capture (before finish/save), latest event may be undone in LIFO order; after `finished`, persisted summary is treated as immutable.
 
 ## 8. Score and Stats Handling
 
@@ -238,6 +257,7 @@ Event rules:
 
 - `goal` increments scoring team.
 - `own_goal` increments opponent score.
+- Current repository stores own goals in a dedicated `ownGoals` event list in match payload; scoreboard is derived as regular goals + opponent own goals.
 
 ### 8.2 Athlete stats updates
 
@@ -287,6 +307,16 @@ When finishing a match:
 6. Compute and persist final score snapshot.
 7. Publish post-match update (for ranking or feed).
 8. Return immutable summary payload.
+
+Current payload note for this repository:
+
+```ts
+interface MatchSummaryPayload {
+  goals: Array<{ athleteId: string; team: "A" | "B" }>;
+  assists: Array<{ athleteId: string; team: "A" | "B" }>;
+  ownGoals?: Array<{ athleteId: string; team: "A" | "B" }>;
+}
+```
 
 ## 11. Ranking Integration
 

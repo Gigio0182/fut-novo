@@ -223,7 +223,17 @@ From match finalization:
 - Ranking updates exactly once per finished match.
 - Page refreshes to show latest standings.
 
+Current repository detail:
+
+- Goal and assist actor visibility during match operation is provided in match scoring events UI (`src/pages/MatchPage.tsx`), while ranking consumes the aggregated results after save/finalization.
+
 Reference: `docs/team-setup-and-match-lifecycle.md`.
+
+### 11.3 Deep-Link Refresh and Hosting Behavior
+
+Deployment must support client-side route refresh for `/ranking`.
+
+Current repository behavior on Vercel uses SPA fallback routing in `vercel.json` so direct access or browser refresh on `/ranking` resolves to `index.html` instead of returning `404`.
 
 ## 12. Accessibility Requirements
 

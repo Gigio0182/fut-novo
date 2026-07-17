@@ -477,20 +477,13 @@ export default function MatchPage() {
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <h2 className="text-sm font-semibold text-[#d2fc38]">Eventos</h2>
-                <button
-                  disabled={scoringEvents.length === 0}
-                  onClick={undoLastScoringEvent}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Undo ultimo
-                </button>
               </div>
 
               {scoringEvents.length === 0 ? (
                 <p className="text-sm text-[#8e919e]">Nenhum evento registrado.</p>
               ) : (
                 <div className="space-y-2">
-                  {[...scoringEvents].reverse().map((event) => (
+                  {[...scoringEvents].reverse().map((event, index) => (
                     <div key={event.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#111218] px-3 py-2">
                       <div className="min-w-0">
                         {event.type === 'own_goal' ? (
@@ -502,9 +495,21 @@ export default function MatchPage() {
                           </p>
                         )}
                       </div>
-                      <span className="ml-3 rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-0.5 text-[10px] font-semibold text-[#d2fc38]">
-                        Time {event.team}
-                      </span>
+                      <div className="ml-3 flex items-center gap-2">
+                        <span className="rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-0.5 text-[10px] font-semibold text-[#d2fc38]">
+                          Time {event.team}
+                        </span>
+                        {index === 0 ? (
+                          <button
+                            onClick={undoLastScoringEvent}
+                            className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white transition hover:bg-white/10"
+                            aria-label="Remover ultimo evento"
+                            title="Remover ultimo evento"
+                          >
+                            🗑
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                   ))}
                 </div>
