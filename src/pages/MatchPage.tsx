@@ -242,6 +242,19 @@ export default function MatchPage() {
     setStep('awards')
   }
 
+  const handleCancelSetup = () => {
+    setTeamA([])
+    setTeamB([])
+    setManualName('')
+    setManualError('')
+    setGoals({})
+    setAssists({})
+    setOwnGoalEvents([])
+    setScoringEvents([])
+    closeGoalModal()
+    setStep('upload')
+  }
+
   const handleSaveMatch = async () => {
     setSaveError('')
 
@@ -432,13 +445,21 @@ export default function MatchPage() {
               </div>
             </div>
 
-            <button
-              disabled={teamA.length < 1 || teamB.length < 1}
-              className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-50"
-              onClick={() => setStep('scoring')}
-            >
-              Start Match
-            </button>
+            <div className="grid grid-cols-[1fr_auto] gap-2">
+              <button
+                disabled={teamA.length < 1 || teamB.length < 1}
+                className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c] disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={() => setStep('scoring')}
+              >
+                Start Match
+              </button>
+              <button
+                onClick={handleCancelSetup}
+                className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         ) : step === 'scoring' ? (
           <div className="space-y-4">
