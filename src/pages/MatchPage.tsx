@@ -484,18 +484,18 @@ export default function MatchPage() {
               ) : (
                 <div className="space-y-2">
                   {[...scoringEvents].reverse().map((event, index) => (
-                    <div key={event.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#111218] px-3 py-2">
-                      <div className="min-w-0">
+                    <div key={event.id} className="flex items-start justify-between rounded-xl border border-white/10 bg-[#111218] px-3 py-2">
+                      <div className="min-w-0 flex-1 pr-2">
                         {event.type === 'own_goal' ? (
-                          <p className="truncate text-sm text-white">Gol contra de {event.scorer}</p>
+                          <p className="break-words whitespace-normal text-sm leading-snug text-white">Gol contra de {event.scorer}</p>
                         ) : (
-                          <p className="truncate text-sm text-white">
+                          <p className="break-words whitespace-normal text-sm leading-snug text-white">
                             Gol de {event.scorer}
                             {event.assist ? ` (Assist: ${event.assist})` : ''}
                           </p>
                         )}
                       </div>
-                      <div className="ml-3 flex items-center gap-2">
+                      <div className="ml-3 flex shrink-0 items-center gap-2 self-start">
                         <span className="rounded-full border border-[#d2fc38]/20 bg-[#d2fc38]/10 px-2 py-0.5 text-[10px] font-semibold text-[#d2fc38]">
                           Time {event.team}
                         </span>
