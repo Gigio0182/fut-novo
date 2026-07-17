@@ -57,7 +57,8 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
   const totalGoalsA = regularGoalsA + ownGoalsB
   const totalGoalsB = regularGoalsB + ownGoalsA
 
-  const eventLines = allPlayers.map((name) => {
+  const eventLines = allPlayers
+    .map((name) => {
     const goals = goalCounts.get(name) ?? 0
     const assists = assistCounts.get(name) ?? 0
 
@@ -79,10 +80,27 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
       details.push(`${assists} ${assists === 1 ? 'assist' : 'assists'}`)
     }
 
-    return details.length > 0
-      ? `${name} (${formatPoints(points)} pts) - ${details.join(' e ')}.`
-      : `${name} (${formatPoints(points)} pts).`
-  })
+      return {
+        name,
+        goals,
+        assists,
+        points,
+        details,
+      }
+    })
+    .filter((player) => player.goals > 0 || player.assists > 0)
+    .sort((left, right) => {
+      if (right.points !== left.points) {
+        return right.points - left.points
+      }
+
+      return left.name.localeCompare(right.name)
+    })
+    .map((player) => `${player.name} (${formatPoints(player.points)} pts) - ${player.details.join(' e ')}.`)
+
+  if (eventLines.length === 0) {
+    eventLines.push('Sem gols ou assistências registrados.')
+  }
 
   const awardLines: string[] = []
 
@@ -112,6 +130,7 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
     ...eventLines,
     '5. Prêmios',
     ...awardLines,
+    'Verifique o ranking atualizo no https://fut-novo.vercel.app/ranking',
   ].join('\n')
 }
 
