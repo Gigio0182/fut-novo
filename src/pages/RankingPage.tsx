@@ -7,7 +7,6 @@ import type { RankingEntry } from '../types'
 interface Player {
   rank: number
   name: string
-  team: string
   g: number
   a: number
   mvp: number
@@ -30,7 +29,6 @@ export default function RankingPage() {
         return {
           rank: index + 1,
           name: entry.name,
-          team: 'VOLVO',
           g: entry.goals,
           a: entry.assists,
           mvp: entry.mvps,

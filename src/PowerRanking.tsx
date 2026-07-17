@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react'
 interface Player {
   rank: number;
   name: string;
-  team: string;
   g: number;
   a: number;
   mvp: number;
@@ -82,21 +81,14 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
         )}
       </div>
 
-      {/* Player name + team */}
-      <div className="flex flex-col gap-px items-start flex-1 min-w-0 whitespace-nowrap">
+      {/* Player name */}
+      <div className="flex items-start flex-1 min-w-0 whitespace-nowrap">
         <span
           className={`overflow-hidden text-ellipsis text-white text-[14px] leading-[18px] ${
             isTop ? 'font-outfit font-extrabold' : 'font-outfit font-bold'
           }`}
         >
           {player.name}
-        </span>
-        <span
-          className={`font-outfit font-semibold text-[11px] uppercase leading-[14px] ${
-            isTop ? 'text-[rgba(255,255,255,0.6)]' : 'text-[#50535e]'
-          }`}
-        >
-          {player.team}
         </span>
       </div>
 
