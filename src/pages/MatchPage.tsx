@@ -529,34 +529,34 @@ export default function MatchPage() {
         ) : step === 'teams' ? (
           <div className="space-y-4">
             <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-                <div className="mb-2 flex items-center justify-between">
+              <div className="space-y-2 border-b border-white/10 pb-3 md:border-b-0 md:pb-0">
+                <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-[#d2fc38]">Time A</h2>
                   <span className="text-xs text-[#8e919e]">{teamA.length}</span>
                 </div>
-                <div className="flex min-h-[120px] flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {teamA.map((name) => (
                     <button
                       key={name}
                       onClick={() => moveAthlete(name, 'B')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-[#d2fc38]/40 bg-[#d2fc38]/10 px-2 py-0 text-[10px] leading-none text-[#d2fc38]"
+                      className="inline-flex w-fit max-w-full items-center rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 px-3 py-1 text-sm font-medium leading-none text-[#d2fc38]"
                     >
                       {name}
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-                <div className="mb-2 flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-[#d2fc38]">Time B</h2>
                   <span className="text-xs text-[#8e919e]">{teamB.length}</span>
                 </div>
-                <div className="flex min-h-[120px] flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {teamB.map((name) => (
                     <button
                       key={name}
                       onClick={() => moveAthlete(name, 'A')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-white/10 bg-white/10 px-2 py-0 text-[10px] leading-none text-white"
+                      className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-medium leading-none text-white"
                     >
                       {name}
                     </button>
