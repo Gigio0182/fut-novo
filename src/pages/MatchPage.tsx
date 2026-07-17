@@ -376,22 +376,15 @@ export default function MatchPage() {
     }
 
     const summary = buildMatchSummary(savedMatchData)
-    const fileName = `sumula-fut-${savedMatchData.finishedAt.slice(0, 16).replace(/[:T]/g, '-')}.txt`
-    const blob = new Blob([summary], { type: 'text/plain;charset=utf-8' })
 
     try {
       if (typeof navigator.share === 'function') {
-        const shareFile = new File([blob], fileName, { type: blob.type })
-
-        if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [shareFile] })) {
-          await navigator.share({
-            title: 'Súmula do fut',
-            text: 'Compartilhando súmula da partida',
-            files: [shareFile],
-          })
-          setShareStatus('Súmula compartilhada com sucesso.')
-          return
-        }
+        await navigator.share({
+          title: 'Súmula do fut',
+          text: summary,
+        })
+        setShareStatus('Súmula compartilhada como mensagem de texto.')
+        return
       }
     } catch (error) {
       const isAbortError = error instanceof DOMException && error.name === 'AbortError'
@@ -402,15 +395,12 @@ export default function MatchPage() {
       }
     }
 
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = fileName
-    document.body.append(anchor)
-    anchor.click()
-    anchor.remove()
-    URL.revokeObjectURL(url)
-    setShareStatus('Arquivo .txt baixado com sucesso.')
+    try {
+      await navigator.clipboard.writeText(summary)
+      setShareStatus('Súmula copiada. Cole no WhatsApp para enviar como mensagem.')
+    } catch {
+      setShareStatus('Não foi possível compartilhar automaticamente. Copie a súmula manualmente.')
+    }
   }
 
   const handleSaveMatch = async () => {
@@ -866,7 +856,7 @@ export default function MatchPage() {
             <h2 className="text-xl font-semibold text-[#d2fc38]">Partida salva!</h2>
             <p className="text-sm text-[#8e919e]">{saveMessage}</p>
             <button onClick={handleShareSummary} className="w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]">
-              Compartilhar Súmula (.txt)
+              Compartilhar Súmula
             </button>
             {shareStatus ? <p className="text-sm text-[#8e919e]">{shareStatus}</p> : null}
             <button onClick={() => navigate('/ranking')} className="w-full rounded-2xl border border-[#d2fc38]/40 px-4 py-3 font-semibold text-[#d2fc38]">
