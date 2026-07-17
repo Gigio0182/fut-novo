@@ -389,7 +389,7 @@ export default function MatchPage() {
                     <button
                       key={name}
                       onClick={() => moveAthlete(name, 'B')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-[#d2fc38]/40 bg-[#d2fc38]/10 px-2.5 py-px text-xs leading-tight text-[#d2fc38]"
+                      className="inline-flex w-fit max-w-full items-center rounded-full border border-[#d2fc38]/40 bg-[#d2fc38]/10 px-2 py-0 text-[10px] leading-none text-[#d2fc38]"
                     >
                       {name}
                     </button>
@@ -406,7 +406,7 @@ export default function MatchPage() {
                     <button
                       key={name}
                       onClick={() => moveAthlete(name, 'A')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-white/10 bg-white/10 px-2.5 py-px text-xs leading-tight text-white"
+                      className="inline-flex w-fit max-w-full items-center rounded-full border border-white/10 bg-white/10 px-2 py-0 text-[10px] leading-none text-white"
                     >
                       {name}
                     </button>
@@ -435,7 +435,7 @@ export default function MatchPage() {
               <p className="mb-2 text-sm font-semibold text-[#d2fc38]">Lista total</p>
               <div className="flex flex-wrap gap-2">
                 {players.map((name) => (
-                  <div key={name} className="inline-flex w-fit max-w-full items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-2.5 py-px text-xs leading-tight text-white">
+                  <div key={name} className="inline-flex w-fit max-w-full items-center gap-1 rounded-full border border-white/10 bg-white/10 px-2 py-0 text-[10px] leading-none text-white">
                     <span>{name}</span>
                     <button onClick={() => removeAthlete(name)} className="text-[#d2fc38]">
                       ×
