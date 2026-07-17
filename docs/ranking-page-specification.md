@@ -57,7 +57,6 @@ Minimum ranking item shape:
 interface RankingPlayer {
   rank: number;
   name: string;
-  team: string;
   g: number; // goals
   a: number; // assists
   mvp: number; // MVP count
@@ -75,7 +74,6 @@ Target recommendation for future calculations:
 interface RankingPlayerTarget {
   rank: number;
   name: string;
-  team: string;
   g: number;
   a: number;
   mvp: number;
@@ -117,6 +115,10 @@ Table columns and order:
 7. `P`
 8. `Pior`
 9. `Ptos`
+
+Current repository rendering note:
+
+- Player row shows athlete name only (team subtitle is not displayed).
 
 ### 7.3 MVP emphasis
 

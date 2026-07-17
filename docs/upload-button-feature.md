@@ -90,7 +90,7 @@ Target behavior for duplicate matches:
 For non-additive fields, use deterministic policy:
 
 - Keep first-seen display name (recommended for stability).
-- Team field policy must be explicitly chosen by implementation (`keep-first` or `keep-latest`).
+- Team field policy is optional and only applicable if a team attribute exists in the consuming view/model.
 
 ### FR-6: Ranking compatibility
 
@@ -158,7 +158,6 @@ The upload feature should converge on a record model equivalent to:
 ```ts
 interface AthleteRecord {
   name: string; // normalized display value, example: "Joao"
-  team?: string;
   g: number; // goals
   a: number; // assists
   mvp?: number;
