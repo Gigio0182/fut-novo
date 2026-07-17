@@ -144,6 +144,7 @@ export default function MatchPage() {
   const [teamB, setTeamB] = useState<string[]>([])
   const [manualName, setManualName] = useState('')
   const [manualError, setManualError] = useState('')
+  const [showManualAdd, setShowManualAdd] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [goals, setGoals] = useState<Record<string, number>>({})
@@ -360,6 +361,7 @@ export default function MatchPage() {
     setTeamB([])
     setManualName('')
     setManualError('')
+    setShowManualAdd(false)
     setGoals({})
     setAssists({})
     setOwnGoalEvents([])
@@ -566,19 +568,33 @@ export default function MatchPage() {
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-              <label className="block text-sm text-[#8e919e]">
-                Adicionar atleta manualmente
-                <input
-                  value={manualName}
-                  onChange={(event) => setManualName(event.target.value)}
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-[#111218] p-3 text-sm text-white outline-none"
-                  placeholder="Nome do atleta"
-                />
-              </label>
-              {manualError ? <p className="mt-2 text-sm text-red-300">{manualError}</p> : null}
-              <button onClick={handleAddAthlete} className="mt-3 w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]">
-                Adicionar
+              <button
+                onClick={() => setShowManualAdd((prev) => !prev)}
+                className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[#111218] px-3 py-2 text-left transition hover:bg-white/[0.03]"
+              >
+                <span className="text-sm font-medium text-[#8e919e]">Adicionar atleta manualmente</span>
+                <span className="inline-flex size-7 items-center justify-center rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 text-lg leading-none text-[#d2fc38]">
+                  {showManualAdd ? '−' : '+'}
+                </span>
               </button>
+
+              {showManualAdd ? (
+                <div className="mt-3">
+                  <label className="block text-sm text-[#8e919e]">
+                    Nome do atleta
+                    <input
+                      value={manualName}
+                      onChange={(event) => setManualName(event.target.value)}
+                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#111218] p-3 text-sm text-white outline-none"
+                      placeholder="Nome do atleta"
+                    />
+                  </label>
+                  {manualError ? <p className="mt-2 text-sm text-red-300">{manualError}</p> : null}
+                  <button onClick={handleAddAthlete} className="mt-3 w-full rounded-2xl bg-[#d2fc38] px-4 py-3 font-semibold text-[#0a0a0c]">
+                    Adicionar
+                  </button>
+                </div>
+              ) : null}
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
