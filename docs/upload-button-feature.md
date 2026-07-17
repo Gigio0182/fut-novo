@@ -129,12 +129,22 @@ Target summary after upload:
 4. System validates and processes rows.
 5. System renders success or warning summary.
 
+Current repository UI note:
+
+- Upload screen is constrained to visible viewport area (below sticky header) to avoid empty page scrolling when no extra content exists.
+- Athlete input textarea remains vertically scrollable for long pasted lists.
+
 ### Button states
 
 - Idle: `Upload`
 - Processing: `Uploading...` (disabled)
 - Completed: return to idle + show toast or inline message
 - Error: return to idle + show actionable message
+
+### Input readability and mobile behavior
+
+- Upload textarea keeps a mobile-friendly input size to avoid persistent browser zoom side effects during paste/edit interactions.
+- Leaving the textarea focus should keep overall page scale stable while preserving textarea internal scroll for long content.
 
 ## 8. Data Contract (Logical)
 

@@ -63,6 +63,14 @@ interface Team {
 
 ## 5. Match Setup
 
+### 5.4 Current Setup Screen Controls (Repository Behavior)
+
+In `src/pages/MatchPage.tsx` team setup step:
+
+- `Start Match` advances to scoring when both teams have at least one athlete.
+- `Cancel` aborts current setup and returns to upload/main step.
+- Cancel action clears in-progress setup/scoring local state (teams, goals, assists, own-goal events, modal state, and local event timeline).
+
 ### 5.1 Required Match Fields
 
 ```ts
@@ -136,6 +144,7 @@ In the current repository flow (`src/pages/MatchPage.tsx`), scoring events are c
 - Own goal -> opponent score is incremented by own-goal rule.
 
 4. A visible events list is updated in scoring screen for operator traceability.
+5. The newest event row contains a remove action (trash icon) to undo the latest event quickly.
 
 ## Phase A - Draft
 
