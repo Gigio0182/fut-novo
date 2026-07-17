@@ -145,6 +145,11 @@ In the current repository flow (`src/pages/MatchPage.tsx`), scoring events are c
 
 4. A visible events list is updated in scoring screen for operator traceability.
 5. The newest event row contains a remove action (trash icon) to undo the latest event quickly.
+6. Scoring step also exposes `Cancel` beside `Finish Match` to abort current match capture and return to upload/main step.
+
+Current repository cancel behavior note:
+
+- The same cancel action used in setup and scoring clears in-progress local state and returns user to upload step.
 
 ## Phase A - Draft
 
