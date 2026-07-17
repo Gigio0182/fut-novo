@@ -538,13 +538,22 @@ export default function MatchPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {teamA.map((name) => (
-                    <button
-                      key={name}
-                      onClick={() => moveAthlete(name, 'B')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 px-3 py-1 text-sm font-medium leading-none text-[#d2fc38]"
-                    >
-                      {name}
-                    </button>
+                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 pr-1">
+                      <button
+                        onClick={() => moveAthlete(name, 'B')}
+                        className="rounded-full px-3 py-1 text-sm font-medium leading-none text-[#d2fc38]"
+                      >
+                        {name}
+                      </button>
+                      <button
+                        onClick={() => removeAthlete(name)}
+                        className="inline-flex size-6 items-center justify-center rounded-full border border-[#d2fc38]/35 text-sm leading-none text-[#d2fc38]"
+                        aria-label={`Remover ${name}`}
+                        title="Remover atleta"
+                      >
+                        ×
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -555,13 +564,22 @@ export default function MatchPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {teamB.map((name) => (
-                    <button
-                      key={name}
-                      onClick={() => moveAthlete(name, 'A')}
-                      className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-medium leading-none text-white"
-                    >
-                      {name}
-                    </button>
+                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 pr-1">
+                      <button
+                        onClick={() => moveAthlete(name, 'A')}
+                        className="rounded-full px-3 py-1 text-sm font-medium leading-none text-white"
+                      >
+                        {name}
+                      </button>
+                      <button
+                        onClick={() => removeAthlete(name)}
+                        className="inline-flex size-6 items-center justify-center rounded-full border border-white/20 text-sm leading-none text-white"
+                        aria-label={`Remover ${name}`}
+                        title="Remover atleta"
+                      >
+                        ×
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -595,20 +613,6 @@ export default function MatchPage() {
                   </button>
                 </div>
               ) : null}
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-              <p className="mb-2 text-sm font-semibold text-[#d2fc38]">Lista total</p>
-              <div className="flex flex-wrap gap-2">
-                {players.map((name) => (
-                  <div key={name} className="inline-flex w-fit max-w-full items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs leading-none text-white sm:text-sm">
-                    <span>{name}</span>
-                    <button onClick={() => removeAthlete(name)} className="rounded px-1 text-sm leading-none text-[#d2fc38]">
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="grid grid-cols-[1fr_auto] gap-2">
