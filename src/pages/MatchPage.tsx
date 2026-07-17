@@ -329,7 +329,7 @@ export default function MatchPage() {
               <textarea
                 value={rawList}
                 onChange={(event) => setRawList(event.target.value)}
-                className="mt-2 min-h-[140px] w-full rounded-2xl border border-[#d2fc38]/70 bg-[#d2fc38]/10 p-3 text-sm text-white outline-none shadow-[0_0_0_1px_rgba(210,252,56,0.2)] focus:border-[#d2fc38] focus:bg-[#d2fc38]/15"
+                className="mt-2 min-h-[140px] w-full rounded-2xl border border-[#d2fc38]/70 bg-[#d2fc38]/10 p-3 text-base text-white outline-none shadow-[0_0_0_1px_rgba(210,252,56,0.2)] focus:border-[#d2fc38] focus:bg-[#d2fc38]/15 sm:text-sm"
                 placeholder="1. João Silva\n2-Maria Souza"
               />
             </label>
