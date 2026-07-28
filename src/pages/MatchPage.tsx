@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PendingMatchContext } from '../App'
 import { checkDuplicates, parseAthleteList, saveAthletes } from '../lib/athleteService'
 import { saveMatch, updateRankings } from '../lib/matchService'
 import type { GoalEvent, Match } from '../types'
@@ -136,6 +137,7 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
 
 export default function MatchPage() {
   const navigate = useNavigate()
+  const { setPendingMatch } = useContext(PendingMatchContext)
   const [rawList, setRawList] = useState('')
   const [parsedNames, setParsedNames] = useState<string[]>([])
   const [duplicates, setDuplicates] = useState<string[]>([])
@@ -171,6 +173,27 @@ export default function MatchPage() {
   const totalGoalsB = regularGoalsB + ownGoalsA
   const hasAnyGoal = Object.values(goals).some((count) => count > 0) || ownGoalEvents.length > 0
   const hasPlayers = players.length > 0
+
+  // Track pending match state and warn on navigation/refresh
+  useEffect(() => {
+    const isMatchInProgress = step !== 'upload' && step !== 'success'
+    setPendingMatch(isMatchInProgress)
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isMatchInProgress) {
+        event.preventDefault()
+        event.returnValue = ''
+      }
+    }
+
+    if (isMatchInProgress) {
+      window.addEventListener('beforeunload', handleBeforeUnload)
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [step, setPendingMatch])
 
   const handleUpload = async () => {
     const names = parseAthleteList(rawList)
@@ -369,6 +392,7 @@ export default function MatchPage() {
     setSavedMatchData(null)
     setShareStatus('')
     closeGoalModal()
+    setPendingMatch(false)
     setStep('upload')
   }
 
