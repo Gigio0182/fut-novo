@@ -48,21 +48,19 @@ export default function RankingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] px-0 py-3 text-white sm:px-2">
-      <div className="mx-auto max-w-full sm:max-w-[402px] rounded-[32px] border border-white/10 bg-[#111218] p-2 shadow-2xl sm:border-white/10">
-        {loading ? (
-          <div className="flex flex-col gap-3 p-4">
-            <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
-            <div className="h-8 animate-pulse rounded bg-white/10" />
-            <div className="h-8 animate-pulse rounded bg-white/10" />
-            <div className="h-8 animate-pulse rounded bg-white/10" />
-          </div>
-        ) : players.length === 0 ? (
-          <div className="p-8 text-center text-sm text-[#8e919e]">No matches yet</div>
-        ) : (
-          <PowerRanking players={players} />
-        )}
-      </div>
+    <div className="min-h-screen bg-[#0a0a0c] px-2 py-3 text-white">
+      {loading ? (
+        <div className="flex flex-col gap-3 p-4">
+          <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
+          <div className="h-8 animate-pulse rounded bg-white/10" />
+          <div className="h-8 animate-pulse rounded bg-white/10" />
+          <div className="h-8 animate-pulse rounded bg-white/10" />
+        </div>
+      ) : players.length === 0 ? (
+        <div className="p-8 text-center text-sm text-[#8e919e]">No matches yet</div>
+      ) : (
+        <PowerRanking players={players} />
+      )}
     </div>
   )
 }
