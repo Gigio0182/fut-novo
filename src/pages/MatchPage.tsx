@@ -28,16 +28,6 @@ function formatPoints(value: number) {
   return value.toFixed(1).replace('.', ',')
 }
 
-function formatMatchDateTime(value: string) {
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value))
-}
-
 function formatMatchDateWithDay(value: string) {
   return new Intl.DateTimeFormat('pt-BR', {
     weekday: 'short',

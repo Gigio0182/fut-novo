@@ -114,18 +114,20 @@ The team setup screen provides clear interaction patterns and guidance optimized
 After match completion, a formatted summary is generated for sharing and record-keeping:
 
 **Structure:**
+
 - **Header**: "SÚMULA - [day abbreviation], [date]" (example: "SÚMULA - seg., 27/07/2026")
 - **Score line**: "Placar: Time A [goals] x [goals] Time B"
 - **Escalações (Lineups)**: List of both teams' athletes with bullet points
-  - Format: "* Team Name: athlete1, athlete2, ..."
+  - Format: "\* Team Name: athlete1, athlete2, ..."
 - **Eventos (Events)**: Sorted list of athletes who contributed (goals/assists)
-  - Format: "* Athlete Name ([points] pts) - [details]"
+  - Format: "\* Athlete Name ([points] pts) - [details]"
   - Only athletes with goals or assists are included
   - Sorted by points (descending), then by name (ascending)
   - Details show count of goals and assists if applicable
 - **Ranking link**: Direct link to the rankings page
 
 **Example:**
+
 ```
 SÚMULA - seg., 27/07/2026
 Placar: Time A 5 x 7 Time B
@@ -145,6 +147,7 @@ https://fut-novo.vercel.app/ranking
 ```
 
 **Points Calculation:**
+
 - Base: 0.5 pts
 - Each goal: 2.5 pts
 - Each assist: 1.5 pts
