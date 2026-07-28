@@ -84,7 +84,7 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
       {/* Player name */}
       <div className="flex items-start flex-1 min-w-0 whitespace-nowrap">
         <span
-          className={`overflow-hidden text-ellipsis text-white text-[14px] leading-[18px] ${
+          className={`overflow-hidden text-ellipsis text-white text-[16px] sm:text-[14px] leading-[18px] ${
             isTop ? 'font-outfit font-extrabold' : 'font-outfit font-bold'
           }`}
         >

@@ -48,8 +48,8 @@ export default function RankingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] px-2 py-3 text-white">
-      <div className="mx-auto max-w-[402px] rounded-[32px] border border-white/10 bg-[#111218] p-2 shadow-2xl">
+    <div className="min-h-screen bg-[#0a0a0c] px-0 py-3 text-white sm:px-2">
+      <div className="mx-auto max-w-full sm:max-w-[402px] rounded-[32px] border border-white/10 bg-[#111218] p-2 shadow-2xl sm:border-white/10">
         {loading ? (
           <div className="flex flex-col gap-3 p-4">
             <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
