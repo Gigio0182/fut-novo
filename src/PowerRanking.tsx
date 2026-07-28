@@ -94,21 +94,21 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
 
       {/* P */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('p') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isActiveColumn('p') ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>
+        <span className={`font-geist-mono font-bold text-[13px] text-white leading-none ${isActiveColumn('p') ? 'font-bold' : ''}`}>
           {player.p}
         </span>
       </div>
 
       {/* G */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('g') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isActiveColumn('g') ? 'text-[#d2fc38]' : 'text-white'}`}>
+        <span className={`font-geist-mono text-[13px] text-white leading-none ${isActiveColumn('g') ? 'font-bold' : 'font-medium'}`}>
           {player.g}
         </span>
       </div>
 
       {/* A */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('a') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isActiveColumn('a') ? 'text-[#d2fc38]' : 'text-white'}`}>
+        <span className={`font-geist-mono text-[13px] text-white leading-none ${isActiveColumn('a') ? 'font-bold' : 'font-medium'}`}>
           {player.a}
         </span>
       </div>
@@ -117,12 +117,12 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
       <div className="flex items-start justify-center shrink-0 w-7">
         {player.mvpHL ? (
           <div className="bg-[rgba(210,252,56,0.12)] flex items-center px-1 py-0.5 rounded shrink-0">
-            <span className="font-geist-mono font-bold text-[12px] text-[#d2fc38] leading-none">
+            <span className="font-geist-mono font-bold text-[12px] text-white leading-none">
               {player.mvp}
             </span>
           </div>
         ) : (
-          <span className="font-geist-mono font-medium text-[12px] text-[#8e919e] leading-none">
+          <span className="font-geist-mono font-bold text-[12px] text-white leading-none">
             {player.mvp}
           </span>
         )}
@@ -130,14 +130,14 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
 
       {/* MD */}
       <div className={`flex items-start justify-center shrink-0 w-[22px] ${isActiveColumn('md') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-medium text-[13px] leading-none ${isActiveColumn('md') ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>
+        <span className={`font-geist-mono font-bold text-[13px] text-white leading-none ${isActiveColumn('md') ? 'font-bold' : ''}`}>
           {player.md}
         </span>
       </div>
 
       {/* Pior */}
       <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
-        <span className="font-geist-mono font-medium text-[13px] text-[#8e919e] leading-none">
+        <span className="font-geist-mono font-medium text-[13px] text-white leading-none">
           {player.pior}
         </span>
       </div>
@@ -145,9 +145,7 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
       {/* Ptos */}
       <div className={`flex items-start justify-end shrink-0 w-12 ${isActiveColumn('ptos') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
         <span
-          className={`font-geist-mono font-extrabold text-[14px] leading-[18px] ${
-            isActiveColumn('ptos') ? 'text-[#d2fc38]' : 'text-white'
-          }`}
+          className={`font-geist-mono font-extrabold text-[14px] text-white leading-[18px] ${isActiveColumn('ptos') ? 'font-extrabold' : ''}`}
         >
           {player.ptos}
         </span>
