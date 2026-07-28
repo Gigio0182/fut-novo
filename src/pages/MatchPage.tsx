@@ -484,7 +484,7 @@ export default function MatchPage() {
     : []
 
   return (
-    <div className="flex min-h-[calc(100dvh-80px)] w-full items-center justify-center overflow-y-auto bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
+    <div className="flex w-full min-h-screen items-center justify-center overflow-y-auto bg-[#0a0a0c] px-4 py-4 text-white sm:px-6" style={{ minHeight: 'calc(100vh - 80px)' }}>
       <div className="w-full max-w-[420px] rounded-[32px] border border-white/10 bg-[#111218] p-4 shadow-2xl sm:p-5">
         {(step === 'upload' || step === 'success') && (
           <div className="mb-5 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#16181f] to-[#0d0f13] p-4">
