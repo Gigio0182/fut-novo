@@ -38,6 +38,15 @@ function formatMatchDateTime(value: string) {
   }).format(new Date(value))
 }
 
+function formatMatchDateWithDay(value: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(value))
+}
+
 function buildMatchSummary(match: Omit<Match, 'id'>) {
   const allPlayers = [...match.teamA, ...match.teamB]
   const goalCounts = new Map<string, number>()
@@ -103,35 +112,19 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
     eventLines.push('Sem gols ou assistências registrados.')
   }
 
-  const awardLines: string[] = []
-
-  if (match.mvpId) {
-    awardLines.push(`${match.mvpId} - MVP`)
-  }
-
-  if (match.bestDefenderId) {
-    awardLines.push(`${match.bestDefenderId} - Melhor Defensor`)
-  }
-
-  if (match.badPlayerId) {
-    awardLines.push(`${match.badPlayerId} - Pior em Campo`)
-  }
-
-  if (awardLines.length === 0) {
-    awardLines.push('Sem prêmios.')
-  }
-
   return [
-    `1. Súmula do fut - ${formatMatchDateTime(match.finishedAt)}`,
-    `2. Placar: Time A ${totalGoalsA} x ${totalGoalsB} Time B`,
-    '3. Escalações:',
-    `Time A: ${match.teamA.join(', ')}`,
-    `Time B: ${match.teamB.join(', ')}`,
-    '4. Eventos',
-    ...eventLines,
-    '5. Prêmios',
-    ...awardLines,
-    'Verifique o ranking atualizo no https://fut-novo.vercel.app/ranking',
+    `SÚMULA - ${formatMatchDateWithDay(match.finishedAt)}`,
+    `Placar: Time A ${totalGoalsA} x ${totalGoalsB} Time B`,
+    '',
+    'Escalações',
+    `* Time A: ${match.teamA.join(', ')}`,
+    `* Time B: ${match.teamB.join(', ')}`,
+    '',
+    'Eventos',
+    ...eventLines.map((line) => `* ${line}`),
+    '',
+    'Ranking',
+    'https://fut-novo.vercel.app/ranking',
   ].join('\n')
 }
 

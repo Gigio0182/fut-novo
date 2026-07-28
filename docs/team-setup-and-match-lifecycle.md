@@ -104,10 +104,53 @@ The team setup screen provides clear interaction patterns and guidance optimized
   - Clicking the name moves the athlete to the opposite team.
   - Clicking the × removes the athlete from the match entirely.
 - **Visual design**: Badges use team-specific colors (Team A: lime/[#d2fc38], Team B: white) to maintain visual distinction.
-- **Mobile optimizations**: 
+- **Mobile optimizations**:
   - Main container includes `overflow-y-auto` to allow scrolling on small viewports.
   - Content remains centered with proper viewport height calculation.
   - Responsive grid layout adapts from single column (mobile) to two columns (desktop, md breakpoint).
+
+### 5.8 Match Summary (Súmula) Format
+
+After match completion, a formatted summary is generated for sharing and record-keeping:
+
+**Structure:**
+- **Header**: "SÚMULA - [day abbreviation], [date]" (example: "SÚMULA - seg., 27/07/2026")
+- **Score line**: "Placar: Time A [goals] x [goals] Time B"
+- **Escalações (Lineups)**: List of both teams' athletes with bullet points
+  - Format: "* Team Name: athlete1, athlete2, ..."
+- **Eventos (Events)**: Sorted list of athletes who contributed (goals/assists)
+  - Format: "* Athlete Name ([points] pts) - [details]"
+  - Only athletes with goals or assists are included
+  - Sorted by points (descending), then by name (ascending)
+  - Details show count of goals and assists if applicable
+- **Ranking link**: Direct link to the rankings page
+
+**Example:**
+```
+SÚMULA - seg., 27/07/2026
+Placar: Time A 5 x 7 Time B
+
+Escalações
+* Time A: Will, GuiR, GuiS, Paulo, Zidas, Otavio, Léo, Rodolfo
+* Time B: Walter, Gigio, Grybogi, Lenon, Alan, Nicolas, Wallace
+
+Eventos
+* Athlete1 (7 pts) - 2 gols e 1 assist.
+* Athlete6 (6 pts) - 1 gol e 2 assist.
+* Athlete3 (4.5 pts) - 1 gol e 1 assist.
+* Athlete11 (3 pts) - 1 gol.
+
+Ranking
+https://fut-novo.vercel.app/ranking
+```
+
+**Points Calculation:**
+- Base: 0.5 pts
+- Each goal: 2.5 pts
+- Each assist: 1.5 pts
+- MVP award: +3 pts
+- Best defender award: +3 pts
+- Worst player award: -0.5 pts
 
 ### 5.1 Required Match Fields
 
