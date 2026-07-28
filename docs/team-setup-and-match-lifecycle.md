@@ -94,15 +94,20 @@ The page title "Craques da Volvo" is conditionally hidden during active match co
 
 ### 5.7 Team Configuration UI and Instructions
 
-The team setup screen provides clear interaction patterns and guidance:
+The team setup screen provides clear interaction patterns and guidance optimized for mobile and desktop:
 
-- **Instruction box**: Displays at the top of the teams section with guidance text: "Defina os jogadores em seus times. Clicando no nome do jogador, ele será movido de time. Clicando no X, ele será removido da partida."
+- **Instruction box**: Displays at the top of the teams section with concise guidance text prefixed with bold "Como usar:" label for visual emphasis. Instructions explain: "Clique no nome para mover entre times. Clique no × para remover da partida."
 - **Athlete badges**: Each athlete is displayed as a pill/badge component with:
-  - Remove button (×) positioned on the **left side** (aligned with the badge start).
-  - Athlete name positioned on the **right side** of the button.
+  - Athlete name positioned on the **left side** of the badge (clickable to move to opposite team).
+  - Remove button (×) positioned on the **right side** (no visible border).
+  - Hover effect on remove button shows red color for clear visual feedback.
   - Clicking the name moves the athlete to the opposite team.
   - Clicking the × removes the athlete from the match entirely.
 - **Visual design**: Badges use team-specific colors (Team A: lime/[#d2fc38], Team B: white) to maintain visual distinction.
+- **Mobile optimizations**: 
+  - Main container includes `overflow-y-auto` to allow scrolling on small viewports.
+  - Content remains centered with proper viewport height calculation.
+  - Responsive grid layout adapts from single column (mobile) to two columns (desktop, md breakpoint).
 
 ### 5.1 Required Match Fields
 

@@ -501,7 +501,7 @@ export default function MatchPage() {
     : []
 
   return (
-    <div className="flex min-h-[calc(100dvh-80px)] items-center justify-center bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
+    <div className="flex min-h-[calc(100dvh-80px)] w-full items-center justify-center overflow-y-auto bg-[#0a0a0c] px-4 py-4 text-white sm:px-6">
       <div className="w-full max-w-[420px] rounded-[32px] border border-white/10 bg-[#111218] p-4 shadow-2xl sm:p-5">
         {(step === 'upload' || step === 'success') && (
           <div className="mb-5 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#16181f] to-[#0d0f13] p-4">
@@ -534,8 +534,8 @@ export default function MatchPage() {
         ) : step === 'teams' ? (
           <div className="space-y-4">
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-              <p className="text-sm text-[#8e919e]">
-                Defina os jogadores em seus times. Clicando no nome do jogador, ele será movido de time. Clicando no X, ele será removido da partida.
+              <p className="text-xs text-[#8e919e] leading-relaxed">
+                <span className="font-semibold text-white">Como usar:</span> Clique no nome para mover entre times. Clique no × para remover da partida.
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-2">
@@ -546,20 +546,20 @@ export default function MatchPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {teamA.map((name) => (
-                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 pl-1">
-                      <button
-                        onClick={() => removeAthlete(name)}
-                        className="inline-flex size-6 items-center justify-center rounded-full border border-[#d2fc38]/35 text-sm leading-none text-[#d2fc38]"
-                        aria-label={`Remover ${name}`}
-                        title="Remover atleta"
-                      >
-                        ×
-                      </button>
+                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#d2fc38]/35 bg-[#d2fc38]/10 pr-1">
                       <button
                         onClick={() => moveAthlete(name, 'B')}
                         className="rounded-full px-3 py-1 text-sm font-medium leading-none text-[#d2fc38]"
                       >
                         {name}
+                      </button>
+                      <button
+                        onClick={() => removeAthlete(name)}
+                        className="inline-flex size-6 items-center justify-center rounded-full text-sm leading-none text-[#d2fc38] hover:text-red-400 transition"
+                        aria-label={`Remover ${name}`}
+                        title="Remover atleta"
+                      >
+                        ×
                       </button>
                     </div>
                   ))}
@@ -572,20 +572,20 @@ export default function MatchPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {teamB.map((name) => (
-                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 pl-1">
-                      <button
-                        onClick={() => removeAthlete(name)}
-                        className="inline-flex size-6 items-center justify-center rounded-full border border-white/20 text-sm leading-none text-white"
-                        aria-label={`Remover ${name}`}
-                        title="Remover atleta"
-                      >
-                        ×
-                      </button>
+                    <div key={name} className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 pr-1">
                       <button
                         onClick={() => moveAthlete(name, 'A')}
                         className="rounded-full px-3 py-1 text-sm font-medium leading-none text-white"
                       >
                         {name}
+                      </button>
+                      <button
+                        onClick={() => removeAthlete(name)}
+                        className="inline-flex size-6 items-center justify-center rounded-full text-sm leading-none text-white hover:text-red-400 transition"
+                        aria-label={`Remover ${name}`}
+                        title="Remover atleta"
+                      >
+                        ×
                       </button>
                     </div>
                   ))}
