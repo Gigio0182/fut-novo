@@ -92,6 +92,18 @@ The page title "Craques da Volvo" is conditionally hidden during active match co
 - **Hidden**: Team setup, scoring, and awards steps.
 - **Rationale**: Improves content density and readability for team names, athlete lists, and scoring interface on mobile and small viewports.
 
+### 5.7 Team Configuration UI and Instructions
+
+The team setup screen provides clear interaction patterns and guidance:
+
+- **Instruction box**: Displays at the top of the teams section with guidance text: "Defina os jogadores em seus times. Clicando no nome do jogador, ele será movido de time. Clicando no X, ele será removido da partida."
+- **Athlete badges**: Each athlete is displayed as a pill/badge component with:
+  - Remove button (×) positioned on the **left side** (aligned with the badge start).
+  - Athlete name positioned on the **right side** of the button.
+  - Clicking the name moves the athlete to the opposite team.
+  - Clicking the × removes the athlete from the match entirely.
+- **Visual design**: Badges use team-specific colors (Team A: lime/[#d2fc38], Team B: white) to maintain visual distinction.
+
 ### 5.1 Required Match Fields
 
 ```ts
