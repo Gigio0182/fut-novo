@@ -534,25 +534,6 @@ export default function MatchPage() {
             >
               {isSaving ? 'Uploading...' : 'Upload'}
             </button>
-
-            {parsedNames.length > 0 && (
-              <div className="rounded-2xl border border-white/10 bg-[#0a0a0c] p-3">
-                <p className="mb-2 text-sm font-semibold text-[#d2fc38]">Atletas encontrados</p>
-                <div className="flex flex-wrap gap-2">
-                  {parsedNames.map((name) => (
-                    <span
-                      key={name}
-                      className={`rounded-full px-3 py-1 text-sm ${duplicates.includes(name) ? 'bg-red-500/20 text-red-300' : 'bg-white/10 text-white'}`}
-                    >
-                      {name}
-                    </span>
-                  ))}
-                </div>
-                {duplicates.length > 0 && (
-                  <p className="mt-3 text-sm text-red-300">Alguns nomes já existem no banco e serão ignorados.</p>
-                )}
-              </div>
-            )}
           </div>
         ) : step === 'teams' ? (
           <div className="space-y-4">
