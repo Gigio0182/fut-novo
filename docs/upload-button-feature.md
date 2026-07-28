@@ -100,9 +100,9 @@ After merge, ranking list processing remains unchanged and consumes deduplicated
 
 Current implementation feedback:
 
-- Shows parsed athletes list.
-- Highlights duplicates that already exist and indicates they will be ignored.
 - Shows actionable error when input is empty or save fails.
+- On successful upload, immediately advances to team setup step.
+- Athlete list preview and duplicate warnings have been removed to maintain UI simplicity and focus on the input action.
 
 Target summary after upload:
 
@@ -124,10 +124,10 @@ Target summary after upload:
 ### Upload flow
 
 1. User clicks Upload.
-2. User pastes list or selects file.
-3. User confirms import.
-4. System validates and processes rows.
-5. System renders success or warning summary.
+2. User pastes list input.
+3. System validates and processes rows.
+4. On success, system auto-splits parsed names into Team A and Team B, then advances to team setup screen.
+5. On error, system displays inline error message and allows retry.
 
 Current repository UI note:
 

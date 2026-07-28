@@ -139,8 +139,6 @@ export default function MatchPage() {
   const navigate = useNavigate()
   const { setPendingMatch } = useContext(PendingMatchContext)
   const [rawList, setRawList] = useState('')
-  const [parsedNames, setParsedNames] = useState<string[]>([])
-  const [duplicates, setDuplicates] = useState<string[]>([])
   const [step, setStep] = useState<Step>('upload')
   const [teamA, setTeamA] = useState<string[]>([])
   const [teamB, setTeamB] = useState<string[]>([])
@@ -207,9 +205,7 @@ export default function MatchPage() {
     setIsSaving(true)
 
     try {
-      const result = await checkDuplicates(names)
-      setParsedNames(names)
-      setDuplicates(result.existing)
+      await checkDuplicates(names)
       await saveAthletes(names)
 
       const splitIndex = Math.ceil(names.length / 2)

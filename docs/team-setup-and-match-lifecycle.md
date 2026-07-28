@@ -71,6 +71,27 @@ In `src/pages/MatchPage.tsx` team setup step:
 - `Cancel` aborts current setup and returns to upload/main step.
 - Cancel action clears in-progress setup/scoring local state (teams, goals, assists, own-goal events, modal state, and local event timeline).
 
+### 5.5 Navigation Safety (Pending Match Protection)
+
+When a match is in progress (any step between upload completion and success screen), navigating away or refreshing the page triggers a confirmation dialog:
+
+- **Dialog title**: "Cancelar partida?"
+- **Dialog message**: Warns user that ongoing match data will be lost.
+- **Options**:
+  - "Voltar" (Back): Returns to match workflow.
+  - "Sair" (Exit): Confirms navigation away or page refresh.
+- **Browser close protection**: `beforeunload` event listener warns on tab/window close during active match.
+- **Scope**: Applies to steps `teams`, `scoring`, and `awards`. Upload and success steps are unprotected.
+- **Implementation**: Context-based state tracking (`PendingMatchContext`) monitors match lifecycle and manages confirmation modal state.
+
+### 5.6 UI Visibility During Configuration
+
+The page title "Craques da Volvo" is conditionally hidden during active match configuration to maximize screen space for team and athlete information:
+
+- **Visible**: Upload step (initial screen) and success step (final screen).
+- **Hidden**: Team setup, scoring, and awards steps.
+- **Rationale**: Improves content density and readability for team names, athlete lists, and scoring interface on mobile and small viewports.
+
 ### 5.1 Required Match Fields
 
 ```ts
