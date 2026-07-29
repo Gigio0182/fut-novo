@@ -94,21 +94,21 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
 
       {/* P */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('p') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-bold text-[13px] text-white leading-none ${isActiveColumn('p') ? 'font-bold' : ''}`}>
+        <span className={`font-geist-mono font-bold text-[14px] text-white leading-none ${isActiveColumn('p') ? 'font-bold' : ''}`}>
           {player.p}
         </span>
       </div>
 
       {/* G */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('g') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono text-[13px] text-white leading-none ${isActiveColumn('g') ? 'font-bold' : 'font-medium'}`}>
+        <span className={`font-geist-mono text-[14px] text-white leading-none ${isActiveColumn('g') ? 'font-bold' : 'font-medium'}`}>
           {player.g}
         </span>
       </div>
 
       {/* A */}
       <div className={`flex items-start justify-center shrink-0 w-5 ${isActiveColumn('a') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono text-[13px] text-white leading-none ${isActiveColumn('a') ? 'font-bold' : 'font-medium'}`}>
+        <span className={`font-geist-mono text-[14px] text-white leading-none ${isActiveColumn('a') ? 'font-bold' : 'font-medium'}`}>
           {player.a}
         </span>
       </div>
@@ -117,12 +117,12 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
       <div className="flex items-start justify-center shrink-0 w-7">
         {player.mvpHL ? (
           <div className="bg-[rgba(210,252,56,0.12)] flex items-center px-1 py-0.5 rounded shrink-0">
-            <span className="font-geist-mono font-bold text-[12px] text-white leading-none">
+            <span className="font-geist-mono font-bold text-[13px] text-white leading-none">
               {player.mvp}
             </span>
           </div>
         ) : (
-          <span className="font-geist-mono font-bold text-[12px] text-white leading-none">
+          <span className="font-geist-mono font-bold text-[13px] text-white leading-none">
             {player.mvp}
           </span>
         )}
@@ -130,14 +130,14 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
 
       {/* MD */}
       <div className={`flex items-start justify-center shrink-0 w-[22px] ${isActiveColumn('md') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-        <span className={`font-geist-mono font-bold text-[13px] text-white leading-none ${isActiveColumn('md') ? 'font-bold' : ''}`}>
+        <span className={`font-geist-mono font-bold text-[14px] text-white leading-none ${isActiveColumn('md') ? 'font-bold' : ''}`}>
           {player.md}
         </span>
       </div>
 
       {/* Pior */}
       <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
-        <span className="font-geist-mono font-medium text-[13px] text-white leading-none">
+        <span className="font-geist-mono font-medium text-[14px] text-white leading-none">
           {player.pior}
         </span>
       </div>
@@ -145,7 +145,7 @@ function PlayerRow({ player, position, activeTab }: { player: Player; position: 
       {/* Ptos */}
       <div className={`flex items-start justify-end shrink-0 w-12 ${isActiveColumn('ptos') ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
         <span
-          className={`font-geist-mono font-extrabold text-[14px] text-white leading-[18px] ${isActiveColumn('ptos') ? 'font-extrabold' : ''}`}
+          className={`font-geist-mono font-extrabold text-[15px] text-white leading-[18px] ${isActiveColumn('ptos') ? 'font-extrabold' : ''}`}
         >
           {player.ptos}
         </span>
@@ -176,7 +176,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
   return (
     <div className="flex min-h-screen w-full flex-col items-start overflow-hidden bg-[#0a0a0c]">
       {/* Hero Header */}
-      <div className="flex flex-col gap-4 items-start pb-5 pt-2 px-4 w-full shrink-0">
+      <div className="flex flex-col gap-4 items-start pb-5 pt-2 px-3 w-full shrink-0">
         <h1 className="font-inter font-bold text-[22px] text-[#d2fc38] leading-none whitespace-nowrap">
           Craques da Volvo
         </h1>
@@ -207,7 +207,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
       </div>
 
       {/* Ranking Table — fills remaining space, clips & scrolls vertically */}
-      <div className="flex flex-col items-start px-4 flex-1 min-h-0 overflow-hidden w-full">
+      <div className="flex flex-col items-start px-2 flex-1 min-h-0 overflow-hidden w-full">
         <div className="bg-[#111218] border border-[#1f212d] rounded-xl w-full flex flex-col overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* Table Header */}
           <div className="flex items-center p-3 w-full shrink-0 bg-[#171821] border-b border-[#1f212d]">
@@ -252,7 +252,7 @@ export default function PowerRanking({ players }: { players: Player[] }) {
       </div>
 
       {/* Footer Legend — always visible */}
-      <div className="flex flex-col items-start pt-5 px-5 w-full shrink-0">
+      <div className="flex flex-col items-start pt-5 px-3 w-full shrink-0">
         <div className="h-px w-full bg-[#1f212d] mb-2" />
         <div className="flex flex-wrap gap-3 items-start w-full pt-2">
           {[
