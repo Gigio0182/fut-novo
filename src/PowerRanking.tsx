@@ -177,10 +177,6 @@ export default function PowerRanking({ players }: { players: Player[] }) {
     <div className="flex min-h-screen w-full flex-col items-start overflow-hidden bg-[#0a0a0c]">
       {/* Hero Header */}
       <div className="flex flex-col gap-4 items-start pb-5 pt-2 px-3 w-full shrink-0">
-        <h1 className="font-inter font-bold text-[22px] text-[#d2fc38] leading-none whitespace-nowrap">
-          Craques da Volvo
-        </h1>
-
         {/* Filter tabs — horizontal scroll, no wrap */}
         <div className="flex gap-2 items-start overflow-x-auto overflow-y-hidden w-full shrink-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {TABS.map((tab, i) => (
