@@ -217,8 +217,8 @@ export default function PowerRanking({ players }: { players: Player[] }) {
                 Player
               </span>
             </div>
-            <div className="flex items-start justify-center shrink-0 w-5">
-              <span className="font-outfit font-extrabold text-[11px] uppercase leading-none text-[#8e919e]">J</span>
+            <div className={`flex items-start justify-center shrink-0 w-5 ${activeTab === 4 ? 'bg-[rgba(210,252,56,0.08)]' : ''}`}>
+              <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 4 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>J</span>
             </div>
             <div className={`flex items-start justify-center shrink-0 w-5 ${activeTab === 1 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
               <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 1 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>G</span>
@@ -232,8 +232,8 @@ export default function PowerRanking({ players }: { players: Player[] }) {
             <div className={`flex items-start justify-center shrink-0 w-[22px] ${activeTab === 3 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
               <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 3 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>MD</span>
             </div>
-            <div className={`flex items-center justify-center shrink-0 w-7 overflow-hidden ${activeTab === 4 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
-              <span className={`font-outfit font-extrabold text-[11px] leading-none ${activeTab === 4 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>P</span>
+            <div className="flex items-center justify-center shrink-0 w-7 overflow-hidden">
+              <span className="font-outfit font-extrabold text-[11px] leading-none text-[#8e919e]">P</span>
             </div>
             <div className={`flex items-start justify-end shrink-0 w-12 ${activeTab === 0 ? 'bg-[rgba(210,252,56,0.05)]' : ''}`}>
               <span className={`font-outfit font-extrabold text-[11px] uppercase leading-none ${activeTab === 0 ? 'text-[#d2fc38]' : 'text-[#8e919e]'}`}>Ptos</span>
