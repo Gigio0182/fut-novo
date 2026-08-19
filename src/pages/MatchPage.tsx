@@ -131,7 +131,6 @@ export default function MatchPage() {
   const [uploadError, setUploadError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [goals, setGoals] = useState<Record<string, number>>({})
-  const [assists, setAssists] = useState<Record<string, number>>({})
   const [ownGoalEvents, setOwnGoalEvents] = useState<GoalEvent[]>([])
   const [awards, setAwards] = useState({ mvpId: '', bestDefenderId: '', badPlayerId: '' })
   const [saveMessage, setSaveMessage] = useState('')
@@ -243,19 +242,10 @@ export default function MatchPage() {
       delete next[name]
       return next
     })
-    setAssists((prev) => {
-      const next = { ...prev }
-      delete next[name]
-      return next
-    })
   }
 
   const updateGoal = (name: string, delta: number) => {
     setGoals((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
-  }
-
-  const updateAssist = (name: string, delta: number) => {
-    setAssists((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }))
   }
 
   const openGoalModal = (name: string) => {
@@ -304,10 +294,6 @@ export default function MatchPage() {
 
     updateGoal(goalModalPlayer, 1)
 
-    if (goalModalAssist) {
-      updateAssist(goalModalAssist, 1)
-    }
-
     setScoringEvents((prev) => [
       ...prev,
       {
@@ -341,10 +327,6 @@ export default function MatchPage() {
       })
     } else {
       updateGoal(lastEvent.scorer, -1)
-
-      if (lastEvent.assist) {
-        updateAssist(lastEvent.assist, -1)
-      }
     }
 
     setScoringEvents((prev) => prev.slice(0, -1))
@@ -366,7 +348,6 @@ export default function MatchPage() {
     setManualError('')
     setShowManualAdd(false)
     setGoals({})
-    setAssists({})
     setOwnGoalEvents([])
     setScoringEvents([])
     setSavedMatchData(null)
