@@ -707,8 +707,8 @@ export default function MatchPage() {
             </div>
 
             {goalModalPlayer ? (
-              <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/70 p-4 sm:items-center">
-                <div className="w-full max-w-[360px] rounded-3xl border border-white/10 bg-[#111218] p-4 shadow-2xl">
+              <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/80 p-4 sm:items-center">
+                <div className="w-full max-w-[360px] rounded-3xl border border-white/20 bg-[#171821] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.65)]">
                   <h3 className="text-base font-semibold text-[#d2fc38]">Registrar gol</h3>
                   <p className="mt-1 text-sm text-white">{goalModalPlayer}</p>
 

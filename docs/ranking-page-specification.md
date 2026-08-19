@@ -108,17 +108,32 @@ Table columns and order:
 
 1. `Pos`
 2. `Player`
-3. `G`
-4. `A`
-5. `MVP`
-6. `MD`
-7. `P`
-8. `Pior`
-9. `Ptos`
+3. `J` — Jogos (matches played)
+4. `G` — Gols (goals)
+5. `A` — Assistências (assists)
+6. `MVP`
+7. `MD` — Melhor Defensor
+8. `P` — Pior em campo (worst player)
+9. `Ptos` — Pontos totais
 
 Current repository rendering note:
 
 - Player row shows athlete name only (team subtitle is not displayed).
+- Column header `J` maps to matches played (`p` field); column header `P` maps to worst-player count (`pior` field).
+
+### 7.4 Active column highlighting
+
+When a tab is active, the column associated with that tab's sort metric is visually emphasized:
+
+- Column header text changes to `#d2fc38`.
+- Column header and cell containers receive a `rgba(210,252,56,0.08)` background.
+- Active column mapping per tab:
+  - `Todos Jogadores` (tab 0): `Ptos` column
+  - `Goleadores` (tab 1): `G` column
+  - `Garçons` (tab 2): `A` column
+  - `Defensores` (tab 3): `MD` column
+  - `Participações` (tab 4): `J` column
+- Columns without an active tab association (`MVP`, `P`) never receive active styling.
 
 ### 7.3 MVP emphasis
 
@@ -238,7 +253,23 @@ Deployment must support client-side route refresh for `/ranking`.
 
 Current repository behavior on Vercel uses SPA fallback routing in `vercel.json` so direct access or browser refresh on `/ranking` resolves to `index.html` instead of returning `404`.
 
-## 12. Accessibility Requirements
+## 12. Footer Legend
+
+The footer renders a horizontal wrapped list of abbreviation definitions. Current legend entries:
+
+| Abbreviation | Description       | Style              |
+| ------------ | ----------------- | ------------------ |
+| G            | Gols              | standard           |
+| A            | Assistências      | standard           |
+| MVP          | Melhor da partida | standard           |
+| MD           | Melhor defensor   | standard           |
+| J            | Jogos             | standard           |
+| Ptos         | Pontos totais     | accent (`#d2fc38`) |
+| P            | Pior em campo     | standard           |
+
+Legend is separated from the table by a horizontal divider line.
+
+## 13. Accessibility Requirements
 
 1. Ensure sufficient text contrast in all row states.
 2. Tabs must be keyboard reachable and have focus styles.

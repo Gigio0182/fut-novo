@@ -92,6 +92,10 @@ The page title "Craques da Volvo" is conditionally hidden during active match co
 - **Hidden**: Team setup, scoring, and awards steps.
 - **Rationale**: Improves content density and readability for team names, athlete lists, and scoring interface on mobile and small viewports.
 
+### 5.6.1 MatchPage Container Viewport Height
+
+The MatchPage root container uses `min-h-screen` with an inline style `minHeight: calc(100vh - 80px)` to reserve the space above the bottom navigation bar. The `vh` unit is used instead of `dvh` for broader browser compatibility.
+
 ### 5.7 Team Configuration UI and Instructions
 
 The team setup screen provides clear interaction patterns and guidance optimized for mobile and desktop:
