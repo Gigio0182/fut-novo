@@ -102,6 +102,11 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
     eventLines.push('Sem gols ou assistências registrados.')
   }
 
+  const awardLines: string[] = []
+  if (match.mvpId) awardLines.push(`* ${match.mvpId} - MVP`)
+  if (match.bestDefenderId) awardLines.push(`* ${match.bestDefenderId} - Melhor defensor`)
+  if (match.badPlayerId) awardLines.push(`* ${match.badPlayerId} - Pior em campo`)
+
   return [
     `SÚMULA - ${formatMatchDateWithDay(match.finishedAt)}`,
     `Placar: Time A ${totalGoalsA} x ${totalGoalsB} Time B`,
@@ -112,6 +117,7 @@ function buildMatchSummary(match: Omit<Match, 'id'>) {
     '',
     'Eventos',
     ...eventLines.map((line) => `* ${line}`),
+    ...(awardLines.length > 0 ? ['', 'Premios', ...awardLines] : []),
     '',
     'Ranking',
     'https://fut-novo.vercel.app/ranking',

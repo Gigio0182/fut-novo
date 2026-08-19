@@ -128,23 +128,31 @@ After match completion, a formatted summary is generated for sharing and record-
   - Only athletes with goals or assists are included
   - Sorted by points (descending), then by name (ascending)
   - Details show count of goals and assists if applicable
+- **Premios (Awards)**: Section listing the three award recipients (only rendered if at least one award was set)
+  - Format: "\* Athlete Name - [award label]"
+  - Award labels: `MVP`, `Melhor defensor`, `Pior em campo`
+  - Section is omitted entirely when no awards were assigned
 - **Ranking link**: Direct link to the rankings page
 
 **Example:**
 
 ```
-SÚMULA - seg., 27/07/2026
-Placar: Time A 5 x 7 Time B
+SÚMULA - ter., 18/08/2026
+Placar: Time A 2 x 1 Time B
 
 Escalações
-* Time A: Will, GuiR, GuiS, Paulo, Zidas, Otavio, Léo, Rodolfo
-* Time B: Walter, Gigio, Grybogi, Lenon, Alan, Nicolas, Wallace
+* Time A: Gabriel, Pedro
+* Time B: Gigio
 
 Eventos
-* Athlete1 (7 pts) - 2 gols e 1 assist.
-* Athlete6 (6 pts) - 1 gol e 2 assist.
-* Athlete3 (4.5 pts) - 1 gol e 1 assist.
-* Athlete11 (3 pts) - 1 gol.
+* Gabriel (9 pts) - 1 gol.
+* Pedro (9 pts) - 1 gol.
+* Gigio (2 pts) - 1 gol.
+
+Premios
+* Gabriel - MVP
+* Pedro - Melhor defensor
+* Gigio - Pior em campo
 
 Ranking
 https://fut-novo.vercel.app/ranking
