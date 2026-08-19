@@ -146,8 +146,9 @@ export default function MatchPage() {
   const [shareStatus, setShareStatus] = useState('')
 
   const players = [...teamA, ...teamB]
-  const regularGoalsA = teamA.reduce((total, name) => total + (goals[name] ?? 0), 0)
-  const regularGoalsB = teamB.reduce((total, name) => total + (goals[name] ?? 0), 0)
+  // derive score from frozen event team — immune to player moves between teams
+  const regularGoalsA = scoringEvents.filter((e) => e.type === 'goal' && e.team === 'A').length
+  const regularGoalsB = scoringEvents.filter((e) => e.type === 'goal' && e.team === 'B').length
   const ownGoalsA = ownGoalEvents.filter((event) => event.team === 'A').length
   const ownGoalsB = ownGoalEvents.filter((event) => event.team === 'B').length
   const totalGoalsA = regularGoalsA + ownGoalsB
@@ -416,22 +417,12 @@ export default function MatchPage() {
         date: new Date().toISOString(),
         teamA,
         teamB,
-        goals: Object.entries(goals)
-          .filter(([, count]) => count > 0)
-          .flatMap(([athleteId, count]) =>
-            Array.from({ length: count }, () => ({
-              athleteId,
-              team: teamA.includes(athleteId) ? 'A' : 'B',
-            })),
-          ),
-        assists: Object.entries(assists)
-          .filter(([, count]) => count > 0)
-          .flatMap(([athleteId, count]) =>
-            Array.from({ length: count }, () => ({
-              athleteId,
-              team: teamA.includes(athleteId) ? 'A' : 'B',
-            })),
-          ),
+        goals: scoringEvents
+          .filter((e) => e.type === 'goal')
+          .map((e) => ({ athleteId: e.scorer, team: e.team })),
+        assists: scoringEvents
+          .filter((e) => e.type === 'goal' && Boolean(e.assist))
+          .map((e) => ({ athleteId: e.assist as string, team: e.team })),
         ownGoals: ownGoalEvents,
         mvpId: awards.mvpId || null,
         bestDefenderId: awards.bestDefenderId || null,

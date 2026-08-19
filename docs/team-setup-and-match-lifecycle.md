@@ -230,6 +230,8 @@ In the current repository flow (`src/pages/MatchPage.tsx`), scoring events are c
 
 - Normal goal -> scorer receives goal and optional assistant receives assist.
 - Own goal -> opponent score is incremented by own-goal rule.
+- Each scoring event records the `team` field frozen at the time of the event. Moving a player to the other team after a goal is registered **does not change the score or the team attribution** of previously recorded events.
+- Score display and match save data are both derived from the immutable `scoringEvents` array, not from current team membership.
 
 4. A visible events list is updated in scoring screen for operator traceability.
 5. The newest event row contains a remove action (trash icon) to undo the latest event quickly.
